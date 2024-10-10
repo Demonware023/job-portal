@@ -1,0 +1,11 @@
+/* src/pages/Home.css */
+.home-container {
+    text-align: center;
+}
+  
+.home-buttons button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}  
