@@ -1,24 +1,35 @@
-.dashboard-content {
+.dashboard {
+    display: flex;
+}
+  
+.sidebar {
+    width: 200px; /* Adjust as needed */
+    background-color: #f0f0f0; /* Sidebar background color */
     padding: 20px;
 }
   
-.job-listings {
-    margin-top: 20px;
+.dashboard-content {
+    flex: 1; /* Takes the remaining space */
+    padding: 20px;
 }
   
-.job-item {
-    border: 1px solid #ddd;
+.application-card, .job-card {
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
     padding: 10px;
-    margin-bottom: 15px;
     border-radius: 5px;
-    background-color: #f9f9f9;
 }
   
-.job-item h3 {
-    margin: 0;
-    color: #333;
+.apply-button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
 }
   
-.job-item p {
-    margin: 5px 0;
-}  
+.apply-button:hover {
+    background-color: #0056b3;
+}
+  

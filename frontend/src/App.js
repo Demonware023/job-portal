@@ -7,7 +7,8 @@ import Jobs from './pages/Jobs';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
+import JobSeekerDashboard from './pages/JobSeekerDashboard';
+import EmployerDashboard from './pages/EmployerDashboard';
 import PostJob from './components/PostJob'; // Import the PostJob component
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
@@ -35,6 +36,8 @@ function App() {
             <>
               <header className="App-header">
                 <h1>Alx -- Job -- Portals</h1>
+                <p>Welcome to Alx Job Portal</p>
+                <p>Find your next job or hire top talent.</p>
                 <p>{message}</p>
               </header>
               <Home message={message} />
@@ -44,7 +47,8 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/jobseeker/dashboard" element={<ProtectedRoute><JobSeekerDashboard /></ProtectedRoute>} />
+          <Route path="/employer/dashboard" element={<ProtectedRoute><EmployerDashboard /></ProtectedRoute>} />
           <Route path="/post-job" element={<ProtectedRoute><PostJob /></ProtectedRoute>} />
         </Routes>
       </div>

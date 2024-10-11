@@ -24,14 +24,18 @@ const Home = () => {
 
   return (
     <div className="home-container">
-      <h1>Welcome to the Job Board</h1>
+      <h1>Welcome to the Tech Job Board</h1>
+      <p>Find your next job or hire top talent.</p>
       <p>{message}</p>
       <div className="home-buttons">
         <Link to="/login">
-          <button>Login</button>
+          <button className="login-button">Login</button>
         </Link>
-        <Link to="/register">
-          <button>Register</button>
+        <Link to="/register-jobseeker">
+          <button className="register-button">Register as Job Seeker</button>
+        </Link>
+        <Link to="/register-employer">
+          <button className="register-button">Register as Employer</button>
         </Link>
       </div>
     </div>

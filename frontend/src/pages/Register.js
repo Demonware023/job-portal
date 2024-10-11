@@ -6,6 +6,7 @@ const Register = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [role, setRole] = useState('jobSeeker'); // Default role
     // const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -16,7 +17,7 @@ const Register = () => {
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ name, email, password }),
+            body: JSON.stringify({ name, email, password, role }),
           });
     
           const data = await response.json();
@@ -26,7 +27,7 @@ const Register = () => {
             // Redirect to the login page
             window.location.href = '/login'; // Redirection to login page after successful registration using JV win.loc.href
           } else {
-            alert(data.msg || 'Login failed. Please try again.'); // Default message for login failure
+            alert(data.msg || 'Registration failed. Please try again.'); // Default message for login failure
           }
         } catch (err) {
           console.error('Error:', err);
@@ -64,6 +65,13 @@ const Register = () => {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
+                </div>
+                <div>
+                    <label>Role</label>
+                    <select value={role} onChange={(e) => setRole(e.target.value)}>
+                      <option value="jobSeeker">Job Seeker</option>
+                      <option value="employer">Employer</option>
+                    </select>
                 </div>
                 <button type="submit">Register</button>
             </form>
