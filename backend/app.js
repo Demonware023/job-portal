@@ -6,11 +6,14 @@ const authRoutes = require('./routes/auth'); // Authentication routes
 const errorHandler = require('./middleware/errorHandler'); // Import the error handler
 const jobRoutes = require('./routes/jobs'); // Import the job routes
 const employerRoutes = require('./routes/employer');
-const jobSeekerRoutes = require('./routes/jobSeeker');
-const jobSeekerRoutes = require('./routes/jobSeekerRoutes');
+const jobSeeker = require('./routes/jobSeekerRoutes');
 const jobSeekerProfileRoutes = require('./routes/jobSeekerProfileRoutes');
 require('dotenv').config(); // Load environment variables
 
+// console.log('Job Routes:', jobRoutes); // This should not be undefined
+// console.log('Employer Routes:', employerRoutes); // This should not be undefined
+// console.log('Job Seeker Routes:', jobSeeker); // This should not be undefined
+// console.log('Job Seeker Profile Routes:', jobSeekerProfileRoutes); // This should not be undefined
 
 // Initialize Express App
 const app = express();
@@ -29,13 +32,14 @@ connectDB(); // Call MongoDB connection function
 
 // Routes
 app.use('/api/jobs', jobRoutes); // Use the job routes
-app.use('/api/auth', authRoutes.router); // Auth routes - Ensure you are using the router from auth.js
+app.use('/api/auth', authRoutes); // Auth routes - Ensure you are using the router from auth.js
 app.use('/api/employer', employerRoutes);
-app.use('/api/jobSeeker', jobSeekerRoutes);
-app.use('/api/jobseeker', jobSeekerRoutes); // Routes for job seeker applications
+app.use('/api/jobseekerRoutes', jobSeeker); // Routes for job seeker applications
 app.use('/api/jobseeker/profile', jobSeekerProfileRoutes); // Routes for job seeker profiles and recommendations
 
 // Use error handling middleware
 app.use(errorHandler);
+
+
 
 module.exports = app;

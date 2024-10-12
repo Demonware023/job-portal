@@ -1,7 +1,7 @@
 // routes/jobSeekerProfileRoutes.js
 const express = require('express');
 const router = express.Router();
-const { authenticateToken, authenticateUser } = require('../middleware/auth'); // Adjust the import path if needed
+const { authenticateUser } = require('../middleware/auth'); // Adjust the import path if needed
 const JobSeekerProfile = require('../models/JobSeekerProfile'); 
 const Job = require('../models/Job');
 

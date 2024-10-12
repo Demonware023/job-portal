@@ -6,12 +6,13 @@ import Home from './pages/Home';
 import Jobs from './pages/Jobs';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
-import Register from './pages/Register';
 import JobSeekerDashboard from './pages/JobSeekerDashboard';
 import EmployerDashboard from './pages/EmployerDashboard';
 import PostJob from './components/PostJob'; // Import the PostJob component
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
+import RegisterJobSeeker from './pages/RegisterJobSeeker';
+import RegisterEmployer from './pages/RegisterEmployer';
 
 
 function App() {
@@ -46,7 +47,8 @@ function App() {
           <Route path="/jobs" element={<Jobs />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/register-employer" element={<RegisterEmployer />} />
+          <Route path="/register-jobseeker" element={<RegisterJobSeeker />} />
           <Route path="/jobseeker/dashboard" element={<ProtectedRoute><JobSeekerDashboard /></ProtectedRoute>} />
           <Route path="/employer/dashboard" element={<ProtectedRoute><EmployerDashboard /></ProtectedRoute>} />
           <Route path="/post-job" element={<ProtectedRoute><PostJob /></ProtectedRoute>} />

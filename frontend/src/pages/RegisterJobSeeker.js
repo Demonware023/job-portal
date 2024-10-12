@@ -15,6 +15,8 @@ const RegisterJobSeeker = () => {
       });
       const data = await response.json();
       if (response.ok) {
+        // Store the token in local storage
+        localStorage.setItem('token', data.token);
         alert('Registration successful!');
         window.location.href = '/login'; // Redirect to login
       } else {
@@ -33,6 +35,11 @@ const RegisterJobSeeker = () => {
         <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" required />
         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required />
         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required />
+        {/* Display role as read-only */}
+        <div>
+            <label>Role: </label>
+            <input type="text" value="Jobseeker" readOnly />
+        </div>
         <button type="submit">Register</button>
       </form>
     </div>

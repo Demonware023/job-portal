@@ -3,7 +3,6 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
-const Employer = require('../models/Employer'); // Employer model
 const rateLimit = require('express-rate-limit');
 const { authenticateToken } = require('../middleware/auth');
 const router = express.Router();
@@ -22,9 +21,14 @@ const registerLimiter = rateLimit({
     message: { msg: 'Too many registration attempts, please try again later.' },
 });
 
+// Define your routes
+router.get('/home', (req, res) => {
+    res.json({ message: 'Welcome to the Home page' });
+});
+
 // Register a new user
 router.post('/register', registerLimiter, async (req, res) => {
-    const { name, email, password, role } = req.body; // Include 'role' in the request body
+    const { name, company, email, password, role } = req.body; // Include 'role' in the request body
     try {
         // Check if user exists
         let user = await User.findOne({ email });
@@ -33,14 +37,14 @@ router.post('/register', registerLimiter, async (req, res) => {
         }
         // Hash the password and save the new user
         const hashedPassword = await bcrypt.hash(password, 10);
-        user = new User({ name, email, password: hashedPassword, role: role || 'JobSeeker' }); // Set the role, or default to 'user'
+        user = new User({ name: role === 'jobseeker' ? name : undefined, company: role === 'employer' ? company : undefined, email, password: hashedPassword, role: role || 'employer' }); // Set the role, or default to 'user'
         await user.save();
 
         // Create a JWT token for the new user
         const payload = { id: user.id, role: user.role };
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        res.status(201).json({ token, message: 'User registered successfully' });
+        res.status(201).json({ token, message: `${role.charAt(0).toUpperCase() + role.slice(1)} registered successfully` });
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');
