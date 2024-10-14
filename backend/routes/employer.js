@@ -1,9 +1,19 @@
 const express = require('express');
 const { check, validationResult } = require('express-validator'); // Import express-validator
+const { registerEmployer, getEmployerProfile } = require('../controllers/employerController');
 const { authenticateEmployer, authenticateToken, authenticateUser, isEmployer } = require('../middleware/auth'); // Adjust import path if needed
 const Employer = require('../models/Employer'); // Adjust import path if needed
 const Job = require('../models/Job'); // Ensure the path to your Job model is correct
 const router = express.Router();
+
+// POST route for registering an employer
+router.post('/', registerEmployer);
+
+// GET route for retrieving an employer profile by ID
+router.get('/:id', getEmployerProfile);
+
+// GET route for retrieving an employer profile by ID
+// router.get('/employer/:id', getEmployerProfile);
 
 // PATCH /api/employer/profile
 router.patch('/api/employer/profile', authenticateEmployer, authenticateToken, async (req, res) => {

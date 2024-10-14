@@ -1,9 +1,16 @@
 // routes/jobSeekerRoutes.js
 const express = require('express');
 const router = express.Router();
+const { registerJobSeeker, getJobSeekerProfile } = require('../controllers/jobSeekerController');
 const { authenticateToken, authenticateUser } = require('../middleware/auth');
 const JobApplication = require('../models/JobApplication');
 const Job = require('../models/Job');
+
+// POST route for registering a job seeker
+router.post('/', registerJobSeeker);
+
+// GET route for retrieving a job seeker profile by user ID
+router.get('/:id', authenticateUser, getJobSeekerProfile);
 
 // Apply for a job (Job Seeker)
 router.post('/api/jobs/:jobId/apply', authenticateToken, async (req, res) => {

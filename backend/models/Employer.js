@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const EmployerSchema = new mongoose.Schema({
-    name: { type: String, required: true },
+    companyName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    companyName: { type: String, required: true },
-    // Add additional fields as necessary
+    role: { type: String, enum: ['employer'], default: 'employer' } // Added role field
 });
 
 // Password hashing before saving the employer
@@ -15,6 +15,11 @@ EmployerSchema.pre('save', async function (next) {
     this.password = await bcrypt.hash(this.password, salt);
     next();
 });
+
+// Compare passwords for login
+EmployerSchema.methods.comparePassword = async function (password) {
+    return await bcrypt.compare(password, this.password);
+};
 
 const Employer = mongoose.model('Employer', EmployerSchema);
 

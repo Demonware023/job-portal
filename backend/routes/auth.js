@@ -3,6 +3,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
+const Employer = require('../models/Employer'); // For employers
 const rateLimit = require('express-rate-limit');
 const { authenticateToken } = require('../middleware/auth');
 const router = express.Router();
@@ -22,56 +23,108 @@ const registerLimiter = rateLimit({
 });
 
 // Define your routes
-router.get('/home', (req, res) => {
+router.get('/', (req, res) => {
     res.json({ message: 'Welcome to the Home page' });
 });
 
-// Register a new user
-router.post('/register', registerLimiter, async (req, res) => {
-    const { name, company, email, password, role } = req.body; // Include 'role' in the request body
-    try {
-        // Check if user exists
-        let user = await User.findOne({ email });
-        if (user) {
-            return res.status(400).json({ msg: 'User already exists' });
-        }
-        // Hash the password and save the new user
-        const hashedPassword = await bcrypt.hash(password, 10);
-        user = new User({ name: role === 'jobseeker' ? name : undefined, company: role === 'employer' ? company : undefined, email, password: hashedPassword, role: role || 'employer' }); // Set the role, or default to 'user'
-        await user.save();
+// Register a jobseeker
+router.post('/register-jobseeker', registerLimiter, async (req, res) => {
+  const { name, email, password, role = 'jobseeker' } = req.body; // Set role to 'jobseeker' by default
+  try {
+    // Check if user exists
+    let user = await User.findOne({ email });
+    if (user) {
+      return res.status(400).json({ msg: 'User already exists' });
+    }
 
-        // Create a JWT token for the new user
-        const payload = { id: user.id, role: user.role };
+    // Validate input
+    if (!name) {
+      return res.status(400).json({ msg: 'Name is required for job seekers' });
+    }
+
+    // Hash the password and save the new user
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user = new User({ name, email, password: hashedPassword, role });
+    await user.save();
+
+    // Create a JWT token for the new user
+    const payload = { id: user.id, role: user.role };
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.status(201).json({ token, message: 'Job seeker registered successfully' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// Register a new employer
+router.post('/register-employer', registerLimiter, async (req, res) => {
+    const { companyName, email, password } = req.body;
+
+    try {
+        // Validate input
+        if (!companyName || !email || !password) {
+            return res.status(400).json({ msg: 'All fields are required.' });
+        }
+
+        // Check if employer already exists
+        let employer = await Employer.findOne({ email });
+        if (employer) {
+            return res.status(400).json({ msg: 'Employer already exists' });
+        }
+
+        // Create new employer
+        employer = new Employer({ companyName, email, password }); // role defaults to 'employer'
+        await employer.save();
+
+        // Create JWT payload
+        const payload = { id: employer.id, role: employer.role };
+
+        // Sign token
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        res.status(201).json({ token, message: `${role.charAt(0).toUpperCase() + role.slice(1)} registered successfully` });
+        res.status(201).json({ token, message: 'Employer registered successfully' });
+    } catch (err) {
+        console.error('Error during employer registration:', err);
+        res.status(500).json({ msg: 'Server error during employer registration' });
+    }
+});  
+
+
+// Login Job Seeker
+router.post('/login-jobseeker', loginLimiter, async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        const user = await User.findOne({ email });
+        if (!user) return res.status(400).json({ msg: 'Invalid credentials' });
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
+
+        const payload = { id: user.id, role: 'jobseeker' };
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        res.json({ token, role: 'jobseeker', message: 'Login successful' });
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');
     }
 });
 
-// Login a user
-router.post('/login', loginLimiter, async (req, res) => {
+// Login Employer
+router.post('/login-employer', loginLimiter, async (req, res) => {
     const { email, password } = req.body;
     try {
-        // Find user by email
-        const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(400).json({ msg: 'Invalid credentials' });
-        }
+        const employer = await Employer.findOne({ email });
+        if (!employer) return res.status(400).json({ msg: 'Invalid credentials' });
 
-        // Compare the hashed password
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ msg: 'Invalid credentials' });
-        }
+        const isMatch = await bcrypt.compare(password, employer.password);
+        if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
 
-        // Create a JWT token
-        const payload = { id: user.id, role: user.role };// Include role in the payload
+        const payload = { id: employer.id, role: 'employer' };
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        res.json({ token, message: 'Login successful' });
+        res.json({ token, role: 'employer', message: 'Login successful' });
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');

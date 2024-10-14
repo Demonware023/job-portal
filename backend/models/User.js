@@ -3,16 +3,11 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 const UserSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-});
-
-const userSchema = new mongoose.Schema({
     name: { type: String, required: true, trim: true },
+    // companyName: { type: String }, // Optional for job seekers
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     password: { type: String, required: true },
-    role: { type: String, enum: ['jobSeeker', 'employer'], default: 'jobSeeker' } // Role field, defaulting to 'jobSeeker'
+    role: { type: String, enum: ['jobSeeker'], required: true }
 });
 
 
@@ -29,6 +24,6 @@ UserSchema.methods.comparePassword = async function (password) {
     return await bcrypt.compare(password, this.password);
 };
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model('User', UserSchema);
 
 module.exports = User;
