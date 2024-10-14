@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import './Dashboard.css';
+import './JobSeekerDashboard.css';
 
 const JobSeekerDashboard = () => {
   const [jobs, setJobs] = useState([]);
@@ -11,15 +11,15 @@ const JobSeekerDashboard = () => {
   const [applicantId, setApplicantId] = useState('');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [dropdownOpen, setDropdownOpen] = useState(false); // State for dropdown
 
   useEffect(() => {
-    // Function to decode JWT and get user information
     const getUserInfo = () => {
       const token = localStorage.getItem('token');
       if (token) {
-        const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode JWT
+        const decodedToken = JSON.parse(atob(token.split('.')[1]));
         setRole(decodedToken.role);
-        setApplicantId(decodedToken.id); // Assuming the JWT contains the applicant's ID as 'id'
+        setApplicantId(decodedToken.id);
       }
     };
 
@@ -36,7 +36,7 @@ const JobSeekerDashboard = () => {
 
     const fetchJobs = async () => {
       try {
-        const response = await axios.get(`/api/jobs?page=${page}&limit=10`); // Modify API call to include pagination
+        const response = await axios.get(`/api/jobs?page=${page}&limit=10`);
         setJobs((prevJobs) => [...prevJobs, ...response.data.jobs]);
         setTotalPages(response.data.totalPages);
       } catch (error) {
@@ -45,17 +45,25 @@ const JobSeekerDashboard = () => {
     };
 
     getUserInfo();
-    // Fetch applications only if the applicantId is set
     if (applicantId) {
       fetchApplications();
     }
     fetchJobs();
-  }, [applicantId, page]); // Run effect whenever applicantId or page changes
+  }, [applicantId, page]);
 
   const loadMoreJobs = () => {
     if (page < totalPages) {
       setPage(page + 1);
     }
+  };
+
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    window.location.href = '/login'; // Redirect to the login page after logging out
   };
 
   return (
@@ -72,7 +80,18 @@ const JobSeekerDashboard = () => {
       </aside>
 
       <div className="dashboard-content">
-        <h1>Your Applications</h1>
+        <div className="header">
+          <h1>Your Applications</h1>
+          <div className="profile-dropdown" onClick={toggleDropdown}>
+            <img src="/path/to/profile-pic.jpg" alt="Profile" className="profile-pic" />
+            {dropdownOpen && (
+              <div className="dropdown-content">
+                <button onClick={handleLogout} className="logout-button">Logout</button>
+              </div>
+            )}
+          </div>
+        </div>
+        
         {applications.length > 0 ? (
           applications.map(app => (
             <div key={app._id} className="application-card">
@@ -104,6 +123,7 @@ const JobSeekerDashboard = () => {
         ) : (
           <p>No jobs available.</p>
         )}
+        
         {page < totalPages && (
           <button onClick={loadMoreJobs}>Load More</button>
         )}

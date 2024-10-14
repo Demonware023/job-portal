@@ -1,6 +1,6 @@
 const express = require('express');
 const { check, validationResult } = require('express-validator');
-const { authenticateToken } = require('../middleware/auth'); // Adjust path as necessary
+
 const Job = require('../models/Job');
 const router = express.Router();
 
