@@ -12,7 +12,7 @@ require('dotenv').config(); // Load environment variables
 
 // console.log("JWT Secret:", process.env.JWT_SECRET);
 // console.log('Job Routes:', jobRoutes); // This should not be undefined
-// console.log('Employer Routes:', employerRoutes); // This should not be undefined
+console.log('Employer Routes:', employerRoutes); // This should not be undefined
 // console.log('Auth Routes:', authRoutes); // Should not be undefined
 // console.log('Job Seeker Routes:', jobSeeker); // This should not be undefined
 // console.log('Job Seeker Profile Routes:', jobSeekerProfileRoutes); // This should not be undefined

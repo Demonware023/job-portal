@@ -5,16 +5,16 @@ const JobSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    company: {
-        type: String,
-        required: true
-    },
     description: {
         type: String,
         required: true
     },
     location: {
         type: String,
+        required: true
+    },
+    pay: {
+        type: Number,
         required: true
     },
     datePosted: {
@@ -24,11 +24,11 @@ const JobSchema = new mongoose.Schema({
     employerId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Employer', // Reference to your employer model
-        required: true // Keeping this required to ensure each job has an associated employer
+        required: true // Ensures each job has an associated employer
     },
     applications: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Application', // Reference to application model
+        ref: 'JobApplication', // Corrected reference to JobApplication model
     }]
 }, {
     timestamps: true // Automatically add createdAt and updatedAt timestamps

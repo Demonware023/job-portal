@@ -8,7 +8,7 @@ import Profile from './pages/Profile';
 import Login from './pages/Login';
 import JobSeekerDashboard from './pages/JobSeekerDashboard';
 import EmployerDashboard from './pages/EmployerDashboard';
-import PostJob from './components/PostJob'; // Import the PostJob component
+import PostJob from './pages/PostJob'; // Import the PostJob component
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 import RegisterJobSeeker from './pages/RegisterJobSeeker';

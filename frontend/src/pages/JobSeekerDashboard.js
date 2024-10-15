@@ -7,7 +7,6 @@ import './JobSeekerDashboard.css';
 const JobSeekerDashboard = () => {
   const [jobs, setJobs] = useState([]);
   const [applications, setApplications] = useState([]);
-  const [role, setRole] = useState('');
   const [applicantId, setApplicantId] = useState('');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -18,7 +17,6 @@ const JobSeekerDashboard = () => {
       const token = localStorage.getItem('token');
       if (token) {
         const decodedToken = JSON.parse(atob(token.split('.')[1]));
-        setRole(decodedToken.role);
         setApplicantId(decodedToken.id);
       }
     };

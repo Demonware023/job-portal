@@ -1,27 +1,27 @@
-// src/pages/PostJob.js
 import React, { useState } from 'react';
 import axios from 'axios';
 
 const PostJob = () => {
   const [title, setTitle] = useState('');
-  const [company, setCompany] = useState('');
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState('');
   const [pay, setPay] = useState('');
 
   const handlePostJob = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem('token'); // Get the token from localStorage
     try {
-      const response = await axios.post('/api/employer/jobs', {
-        title,
-        company,
-        description,
-        location,
-        pay,
-      });
+      const response = await axios.post(
+        '/api/employer/jobs',
+        { title, description, location, pay },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Send token in the Authorization header
+          },
+        }
+      );
       alert(response.data.msg);
       setTitle('');
-      setCompany('');
       setDescription('');
       setLocation('');
       setPay('');
@@ -34,19 +34,15 @@ const PostJob = () => {
     <div>
       <h2>Post a Job</h2>
       <form onSubmit={handlePostJob}>
+        <label htmlFor="job-title">Job Title</label>
         <input
+          id="job-title" 
           type="text"
           placeholder="Job Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
-        />
-        <input
-        type="text"
-        placeholder="Company Name"
-        value={company}
-        onChange={(e) => setCompany(e.target.value)}
-        required
+          autoComplete="on" // Add autocomplete
         />
         <textarea
           placeholder="Job Description"

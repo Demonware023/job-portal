@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const { registerJobSeeker, getJobSeekerProfile } = require('../controllers/jobSeekerController');
 const { authenticateToken, authenticateUser } = require('../middleware/auth');
-const JobApplication = require('../models/JobApplication');
+const JobApplication = require('../models/jobApplication');
 const Job = require('../models/Job');
 
 // POST route for registering a job seeker
