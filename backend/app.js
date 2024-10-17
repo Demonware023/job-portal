@@ -6,8 +6,8 @@ const authRoutes = require('./routes/auth'); // Authentication routes
 const errorHandler = require('./middleware/errorHandler'); // Import the error handler
 // const jobRoutes = require('./routes/jobs'); // Import the job routes
 const employerRoutes = require('./routes/employer');
-const jobSeekerRoutes = require('./routes/jobSeekerRoutes');
-const jobSeekerProfileRoutes = require('./routes/jobSeekerProfileRoutes');
+const jobSeekerRoutes = require('./routes/jobseeker');
+// const jobSeekerProfileRoutes = require('./routes/jobSeekerProfileRoutes');
 require('dotenv').config(); // Load environment variables
 
 // console.log("JWT Secret:", process.env.JWT_SECRET);
@@ -38,8 +38,8 @@ connectDB(); // Call MongoDB connection function
 // app.use('/api/jobs', jobRoutes); // Use the job routes
 app.use('/api/auth', authRoutes); // Auth routes - Ensure you are using the router from auth.js
 app.use('/api/employer', employerRoutes);
-app.use('/api/jobseekerRoutes', jobSeekerRoutes); // Routes for job seeker applications
-app.use('/api/jobseeker/profile', jobSeekerProfileRoutes); // Routes for job seeker profiles and recommendations
+app.use('/api/jobseeker', jobSeekerRoutes); // Routes for job seeker applications
+// app.use('/api/jobseeker/profile', jobSeekerProfileRoutes); // Routes for job seeker profiles and recommendations
 
 // Use error handling middleware
 app.use(errorHandler);

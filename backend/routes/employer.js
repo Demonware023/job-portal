@@ -1,9 +1,10 @@
 const express = require('express');
 const { check, validationResult } = require('express-validator'); // Import express-validator
-const { registerEmployer, getEmployerProfile } = require('../controllers/employerController');
+// const { registerEmployer, getEmployerProfile } = require('../controllers/employerController');
 const { authenticateEmployer, authenticateToken } = require('../middleware/auth'); // Adjust import path if needed
 const Employer = require('../models/Employer'); // Adjust import path if needed
 const Job = require('../models/Job'); // Ensure the path to your Job model is correct
+const JobApplication = require('../models/JobApplication');
 const router = express.Router();
 
 // Middleware to verify user role
@@ -15,10 +16,10 @@ const router = express.Router();
 }; */
 
 // POST route for registering an employer
-router.post('/', registerEmployer);
+// router.post('/', registerEmployer);
 
 // GET route for retrieving an employer profile by ID
-router.get('/:id', getEmployerProfile);
+// router.get('/:id', getEmployerProfile);
 
 // PATCH /api/employer/profile
 router.patch('/profile', authenticateToken, authenticateEmployer, async (req, res) => {
@@ -28,6 +29,7 @@ router.patch('/profile', authenticateToken, authenticateEmployer, async (req, re
     if (!employer) return res.status(404).json({ msg: 'Employer not found' });
     res.status(200).json(employer);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ msg: 'Server error' });
   }
 });
@@ -78,7 +80,7 @@ router.post(
 );
 
 // GET /api/employer/jobs - Fetch jobs posted by the employer (restricted to authenticated employers)
-router.get('/jobs', authenticateEmployer, async (req, res) => {
+router.get('/jobs', authenticateToken, authenticateEmployer, async (req, res) => {
   try {
     const jobs = await Job.find({ employerId: req.employer.id });
     res.status(200).json(jobs);
@@ -142,6 +144,29 @@ router.patch('/jobs/:jobId/applications/:appId', authenticateToken, authenticate
   } catch (err) {
     console.error('Error updating application status:', err);
     res.status(500).json({ msg: 'Server error' });
+  }
+});
+
+// GET /api/employer/applications - Fetch job applications for jobs posted by the employer
+router.get('/applications', authenticateToken, authenticateEmployer, async (req, res) => {
+  try {
+    const employerId = req.employer.id; // Assuming employer is authenticated
+
+    // Find jobs posted by the employer
+    const jobs = await Job.find({ employerId });
+
+    // Extract job IDs
+    const jobIds = jobs.map(job => job._id);
+
+    // Find applications for those jobs
+    const applications = await JobApplication.find({ jobId: { $in: jobIds } })
+      .populate('jobSeekerId', 'name email') // Populate job seeker details
+      .populate('jobId', 'title'); // Populate job title
+
+    res.status(200).json(applications);
+  } catch (error) {
+    console.error('Error fetching applications:', error);
+    res.status(500).send('Server error');
   }
 });
 

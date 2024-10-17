@@ -37,7 +37,7 @@ const Login = () => {
 
       if (userRole === 'employer') {
         navigate('/employer/dashboard');
-      } else if (userRole === 'jobseeker') {
+      } else if (userRole === 'jobSeeker') {
         navigate('/jobseeker/dashboard');
       }
     } catch (err) {

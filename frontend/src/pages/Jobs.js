@@ -5,7 +5,7 @@ function Jobs() {
   const [jobs, setJobs] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/jobs')
+    axios.get('http://localhost:5000/api')
       .then((response) => {
         setJobs(response.data);
       })

@@ -12,9 +12,10 @@ const EmployerDashboard = () => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axios.get('/api/jobs', {
+        const response = await axios.get('/api/employer/jobs', {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });
+        console.log('Fetched jobs:', response.data); // Log the jobs to verify the data
         setJobs(response.data);
       } catch (error) {
         console.error('Error fetching jobs:', error);
@@ -23,7 +24,7 @@ const EmployerDashboard = () => {
 
     const fetchApplications = async () => {
       try {
-        const response = await axios.get('/api/applications', {
+        const response = await axios.get('/api/employer/applications', {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });
         setApplications(response.data);
@@ -36,6 +37,7 @@ const EmployerDashboard = () => {
     fetchApplications();
   }, []);
 
+  // Handle accepting or rejecting an application
   const handleApplicationAction = async (jobId, appId, status) => {
     try {
       const response = await axios.patch(`/api/jobs/${jobId}/applications/${appId}`, { status });
@@ -93,7 +95,7 @@ const EmployerDashboard = () => {
               {job.applications.length > 0 ? (
                 job.applications.map(app => (
                   <div key={app._id} className="application-card">
-                    <p>Applicant: {app.userId}</p>
+                    <p>Applicant: {app.jobSeekerId.name} ({app.jobSeekerId.email})</p>
                     <p>Status: {app.status}</p>
                     <p>Cover Letter: {app.coverLetter}</p>
                     <p>Expected Pay: {app.expectedPay}</p>
@@ -113,12 +115,14 @@ const EmployerDashboard = () => {
           <p>No jobs found.</p>
         )}
 
+        {/* Display All Applications */}
         <h2>All Applications</h2>
         {applications.length > 0 ? (
           applications.map(app => (
             <div key={app._id} className="application-card">
               <h3>{app.job.title}</h3>
               <p>Status: {app.status}</p>
+              <p>Applicant: {app.jobSeekerId.name} ({app.jobSeekerId.email})</p>
             </div>
           ))
         ) : (

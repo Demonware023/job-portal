@@ -44,8 +44,9 @@ router.post('/register-jobseeker', registerLimiter, async (req, res) => {
         }
 
         // Hash the password and save the new user
-        const hashedPassword = await bcrypt.hash(password, 10);
-        user = new User({ name, email, password: hashedPassword });
+        // const hashedPassword = await bcrypt.hash(password, 10);
+        // user = new User({ name, email, password: hashedPassword });
+        user = new User({ name, email, password });
         await user.save();
 
         // Create JWT payload
@@ -113,7 +114,7 @@ router.post('/login-jobseeker', loginLimiter, async (req, res) => {
         }
 
         // Create JWT payload
-        const payload = { id: user.id, role: 'jobSeeker' }; // Use the user's role from the database
+        const payload = { id: user.id, role: user.role }; // Use the user's role from the database
 
         // Sign token
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
@@ -136,7 +137,7 @@ router.post('/login-employer', loginLimiter, async (req, res) => {
         const isMatch = await bcrypt.compare(password, employer.password);
         if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
 
-        const payload = { id: employer.id, role: 'employer' };
+        const payload = { id: employer.id, role: employer.role };
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         res.json({ token, role: 'employer', message: 'Login successful' });
@@ -149,20 +150,6 @@ router.post('/login-employer', loginLimiter, async (req, res) => {
 // Get welcome message
 router.get('/home', (req, res) => {
     res.json({ message: 'Welcome to the Job Board!' });
-});
-
-// Get user profile
-router.get('/profile', authenticateToken, async (req, res) => {
-    try {
-        const user = await User.findById(req.user.id).select('-password');
-        if (!user) {
-            return res.status(404).json({ msg: 'User not found' });
-        }
-        res.json({ profile: user });
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server error');
-    }
 });
 
 // Export the router

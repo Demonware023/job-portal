@@ -1,3 +1,4 @@
+// controllers/employerController
 const Employer = require('../models/Employer'); // Assuming you have an Employer model
 
 // Register a new employer

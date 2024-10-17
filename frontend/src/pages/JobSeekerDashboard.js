@@ -34,7 +34,7 @@ const JobSeekerDashboard = () => {
 
     const fetchJobs = async () => {
       try {
-        const response = await axios.get(`/api/jobs?page=${page}&limit=10`);
+        const response = await axios.get(`/api/jobseeker/jobs?page=${page}&limit=10`);
         setJobs((prevJobs) => [...prevJobs, ...response.data.jobs]);
         setTotalPages(response.data.totalPages);
       } catch (error) {
