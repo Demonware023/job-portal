@@ -1,4 +1,3 @@
-// src/pages/JobSeekerProfile.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -11,13 +10,22 @@ const JobSeekerProfile = () => {
   useEffect(() => {
     // Fetch existing profile data
     const fetchProfile = async () => {
-      const response = await axios.get('/api/jobseeker/profile');
-      if (response.data.profile) {
-        const { bio, skills, experience, resumeUrl } = response.data.profile;
-        setBio(bio);
-        setSkills(skills.join(', '));
-        setExperience(experience);
-        setResumeUrl(resumeUrl);
+      try {
+        const token = localStorage.getItem('token'); // Assume token is stored in localStorage
+        const response = await axios.get('/api/jobseeker/profile', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (response.data.profile) {
+          const { bio, skills, experience, resumeUrl } = response.data.profile;
+          setBio(bio);
+          setSkills(skills.join(', '));
+          setExperience(experience);
+          setResumeUrl(resumeUrl);
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error);
       }
     };
     fetchProfile();
@@ -26,11 +34,16 @@ const JobSeekerProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const token = localStorage.getItem('token'); // Assume token is stored in localStorage
       const response = await axios.post('/api/jobseeker/profile', {
         bio,
-        skills: skills.split(',').map(skill => skill.trim()), // Split by comma
+        skills: skills.split(',').map((skill) => skill.trim()), // Split by comma
         experience,
         resumeUrl,
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       alert(response.data.msg);
     } catch (error) {

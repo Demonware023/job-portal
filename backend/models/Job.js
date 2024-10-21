@@ -26,9 +26,13 @@ const JobSchema = new mongoose.Schema({
         ref: 'Employer', // Reference to your employer model
         required: true // Ensures each job has an associated employer
     },
+    skills: { // Add this field to store job-related skills
+        type: [String], // Array of strings for skills
+        required: true
+    },
     applications: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'JobApplication', // Corrected reference to JobApplication model
+        ref: 'JobApplication', // Reference to JobApplication model
     }]
 }, {
     timestamps: true // Automatically add createdAt and updatedAt timestamps

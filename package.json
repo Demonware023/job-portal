@@ -11,7 +11,13 @@
     "concurrently": "^8.2.2"
   },
   "dependencies": {
+    "@admin-bro/express": "^3.1.0",
+    "admin-bro": "^4.0.1",
+    "admin-bro-expressjs": "^2.1.1",
+    "admin-bro-mongoose": "^0.5.2",
+    "antd": "^5.21.4",
     "dotenv": "^16.4.5",
-    "jwt-decode": "^4.0.0"
+    "jwt-decode": "^4.0.0",
+    "react-modal": "^3.16.1"
   }
 }

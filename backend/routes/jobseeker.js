@@ -20,24 +20,30 @@ router.post('/jobs/:jobId/apply', authenticateToken, async (req, res) => {
   const { coverLetter, expectedPay, resume } = req.body;
 
   try {
-    const job = await Job.findById(jobId);
-    if (!job) return res.status(404).json({ msg: 'Job not found' });
+      const job = await Job.findById(jobId);
+      if (!job) return res.status(404).json({ msg: 'Job not found' });
 
-    const application = {
-      userId: req.user.id,
-      coverLetter,
-      expectedPay,
-      resume,
-      status: 'pending', // Default status for new applications
-    };
+      // Create a new job application
+      const application = new JobApplication({
+          jobSeekerId: req.user.id, // Use the authenticated user's ID
+          jobId: jobId,
+          coverLetter,
+          expectedPay,
+          resume,
+          status: 'pending', // Default status for new applications
+      });
 
-    job.applications.push(application);
-    await job.save();
+      // Save the application
+      await application.save();
 
-    res.status(200).json({ msg: 'Application submitted successfully' });
+      // Add the application ID to the job's applications array
+      job.applications.push(application._id);
+      await job.save();
+
+      res.status(200).json({ msg: 'Application submitted successfully' });
   } catch (err) {
-    console.error('Error applying for job:', err);
-    res.status(500).json({ msg: 'Server error' });
+      console.error('Error applying for job:', err);
+      res.status(500).json({ msg: 'Server error' });
   }
 });
 

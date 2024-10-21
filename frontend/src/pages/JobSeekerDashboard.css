@@ -4,6 +4,24 @@
     background-color: #f4f4f4;
 }
 
+.portal-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 30px auto; /* Adjusted for centering and spacing */
+    width: 100px; /* Adjust as needed */
+    height: 100px; /* Adjust as needed */
+}
+
+.portal-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 30px auto; /* Adjusted for centering and spacing */
+    width: 100px; /* Adjust as needed */
+    height: 100px; /* Adjust as needed */
+}
+
 .sidebar {
     width: 250px;
     background-color: #343a40;

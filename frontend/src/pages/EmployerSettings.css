@@ -1,0 +1,72 @@
+/* src/components/EmployerSettings.css */
+
+.container {
+    max-width: 600px; /* Set a max width for the form */
+    margin: 0 auto; /* Center the form */
+    padding: 20px;
+    background-color: #1c1c1c; /* Dark background */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+h2 {
+    color: #f50057; /* Neon pink color */
+    text-align: center; /* Center the heading */
+    margin-bottom: 20px; /* Space below heading */
+}
+
+form {
+    display: flex;
+    flex-direction: column; /* Stack form elements vertically */
+}
+
+div {
+    margin-bottom: 15px; /* Space between form fields */
+}
+
+label {
+    color: #ffffff; /* White text for labels */
+    margin-bottom: 5px; /* Space below labels */
+}
+
+input,
+textarea {
+    padding: 10px;
+    border: none; /* Remove default border */
+    border-radius: 4px; /* Rounded corners */
+    background-color: #f0f0f0; /* Light background for inputs */
+    color: #333; /* Dark text for inputs */
+    font-size: 16px; /* Font size for inputs */
+}
+
+input:focus,
+textarea:focus {
+    outline: none; /* Remove default outline */
+    border: 2px solid #f50057; /* Neon pink border on focus */
+    background-color: #ffffff; /* White background on focus */
+}
+
+button {
+    padding: 10px;
+    background-color: #f50057; /* Neon pink button */
+    color: #ffffff; /* White text on button */
+    border: none; /* Remove default border */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 16px; /* Font size for button */
+    transition: background-color 0.3s; /* Smooth transition */
+}
+
+button:hover {
+    background-color: #d50045; /* Darker pink on hover */
+}
+
+p {
+    text-align: center; /* Center messages */
+    color: #28a745; /* Green for success messages */
+    margin-top: 10px; /* Space above messages */
+}
+
+p.error {
+    color: #dc3545; /* Red for error messages */
+}

@@ -1,0 +1,15 @@
+/* src/components/HomeIcon.css */
+.home-icon {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  text-decoration: none; /* Remove underline */
+}
+
+.home-icon .icon {
+  color: #fff; /* Set icon color */
+}
+
+.home-icon:hover .icon {
+  color: #f0a500; /* Change color on hover */
+}

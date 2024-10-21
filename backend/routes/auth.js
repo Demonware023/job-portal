@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const Employer = require('../models/Employer'); // For employers
 const rateLimit = require('express-rate-limit');
-const { authenticateToken } = require('../middleware/auth');
+// const { authenticateToken } = require('../middleware/auth');
 const router = express.Router();
 
 // Rate limiting: Limit to 100 requests per 15 minutes
