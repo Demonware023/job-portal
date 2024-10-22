@@ -3,7 +3,30 @@ body, html {
   margin: 0;
   padding: 0;
   height: 100%;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
   font-family: 'Roboto', sans-serif; /* Use modern font */
+}
+
+/* Container for the entire dashboard layout */
+.dashboard-container {
+  display: flex;
+  height: 100vh; /* Full height of the viewport */
+}
+
+/* Sidebar styling */
+.sidebar {
+  width: 250px; /* Fixed width for the sidebar */
+  background-color: #2c2c2e; /* Dark background for sidebar */
+  color: white;
+  padding: 20px;
+}
+
+/* Main content area styling */
+.main-content {
+  flex-grow: 1; /* Take remaining space */
+  padding: 30px;
+  /* background-color: #1c1c1e; */ /* Dark background for main content */
+  overflow-y: auto; /* Allow vertical scrolling */
 }
 
 /* Button for viewing applications */
@@ -27,13 +50,13 @@ body, html {
 /* Container for applications */
 .applications-container {
   padding: 30px;
-  background-color: #1c1c1e; /* Dark background */
+ /*  background-color: #1c1c1e; */ /* Dark background */
   border-radius: 10px;
   color: #f9f9f9; /* Light text for contrast */
-  max-width: 1200px; /* Set a max width for better responsiveness */
+  max-width: 1200px; /* Optional: Set a max width for better responsiveness */
   margin: 0 auto; /* Center the container */
   overflow-y: auto; /* Allow vertical scrolling if content overflows */
-  height: calc(100vh - 60px); /* Adjust height to fit screen, accounting for header/footer */
+  height: calc(100vh - 60px); /* Make the container full height of the viewport, adjusting for any header */
 }
 
 /* List of jobs */
@@ -55,6 +78,13 @@ body, html {
   box-sizing: border-box; /* Include padding in width */
 }
 
+/* Styling for the job description inside the job card */
+.job-card p {
+  max-height: 60px; /* Limit the height to show only a few lines */
+  overflow: hidden; /* Hide the overflow text */
+  text-overflow: ellipsis; /* Add '...' for overflowing text */
+}
+
 .job-card:hover {
   background-color: #38383a; /* Slightly lighter on hover */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Subtle shadow effect */
@@ -68,7 +98,7 @@ body, html {
   color: white;
   margin-bottom: 20px;
   transition: background-color 0.3s ease;
-  width: 1000px;
+  width: 100%; /* Use full width */
 }
 
 /* Application card heading */
@@ -100,7 +130,7 @@ body, html {
   background-color: #e60073;
 }
 
-/* Responsive adjustments */
+/* Responsive Design */
 @media (max-width: 768px) {
   .job-card {
     width: calc(50% - 20px); /* 2 cards per row on medium screens */

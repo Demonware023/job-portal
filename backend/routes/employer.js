@@ -202,14 +202,14 @@ router.get('/jobs/:jobId/applications', authenticateToken, authenticateEmployer,
 
     if (!applications.length) return res.status(404).json({ msg: 'No applications found for this job.' });
 
-    // Prepare the response with job and employer details
+/*     // Prepare the response with job and employer details
     const sanitizedApplications = applications.map(app => ({
       id: app._id,
       jobId: app.jobId.title,
       jobSeeker: app.jobSeekerId ? { name: app.jobSeekerId.name, email: app.jobSeekerId.email } : null,
       employer: job.employerId ? { companyName: job.employerId.companyName } : null, // Include employer details
       // Include other fields you might want to add
-    }));
+    })); */
 
     res.status(200).json(sanitizedApplications);
   } catch (err) {

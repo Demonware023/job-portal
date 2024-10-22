@@ -41,6 +41,19 @@ const EmployerDashboard = () => {
     fetchApplications();
   }, []);
 
+  const handleApplicationAction = async (jobId, appId, status) => {
+    try {
+      const response = await axios.patch(`/api/employer/jobs/${jobId}/applications/${appId}`, { status });
+      alert(response.data.msg);
+      const updatedApplications = applications.map((app) => 
+        app._id === appId ? { ...app, status } : app
+      );
+      setApplications(updatedApplications);
+    } catch (error) {
+      alert('Failed to update application status.');
+    }
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     navigate('/login');
@@ -83,7 +96,23 @@ const EmployerDashboard = () => {
                 <h2>{job.title}</h2>
                 <p>{job.description}</p>
                 <p>Location: {job.location}</p>
-                <h4>Applications: {applications.filter(app => app.jobId === job._id).length}</h4>
+                <h4>Applications</h4>
+                {job.applications && job.applications.length > 0 ? (
+                  job.applications.map(app => (
+                    <div key={app._id} className="application-card">
+                      <p>
+                        Applicant: {app.jobSeekerId ? `${app.jobSeekerId.name} (${app.jobSeekerId.email})` : 'Unknown Applicant'}
+                      </p>
+                      <p>Status: {app.status}</p>
+                      <p>Cover Letter: {app.coverLetter}</p>
+                      <p>Expected Pay: {app.expectedPay}</p>
+                      <button onClick={() => handleApplicationAction(job._id, app._id, 'accepted')}>Accept</button>
+                      <button onClick={() => handleApplicationAction(job._id, app._id, 'rejected')}>Reject</button>
+                    </div>
+                  ))
+                ) : (
+                  <p>No applications yet.</p>
+                )}
                 <Link to={`/employer/applications/${job._id}`}>
                   <button className="view-applications-button">View Applications</button>
                 </Link>
