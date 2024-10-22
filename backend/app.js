@@ -40,6 +40,7 @@ app.use('/api/auth', authRoutes); // Auth routes - Ensure you are using the rout
 app.use('/api/employer', employerRoutes);
 app.use('/api/jobseeker', jobSeekerRoutes); // Routes for job seeker applications
 // app.use('/api/jobseeker/profile', jobSeekerProfileRoutes); // Routes for job seeker profiles and recommendations
+app.use('/uploads', express.static('uploads'));
 
 // Use error handling middleware
 app.use(errorHandler);

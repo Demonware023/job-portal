@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import './EmployerProfile.css'; // Import the CSS file
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import './EmployerProfile.css'; // Ensure this file contains your CSS from both Dashboard and Profile
 
 const EmployerProfile = () => {
   const [companyName, setCompanyName] = useState('');
@@ -8,138 +8,132 @@ const EmployerProfile = () => {
   const [location, setLocation] = useState('');
   const [websiteUrl, setWebsiteUrl] = useState('');
   const [industry, setIndustry] = useState('');
-  const [profileImage, setProfileImage] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [message, setMessage] = useState(''); // Add state for message
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
 
+  // Load profile data from local storage when the component mounts
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const token = localStorage.getItem('token'); // Retrieve token from storage
-        const response = await axios.get('/api/employer/profile', {
-          headers: {
-            Authorization: `Bearer ${token}`, // Include token in headers
-          },
-        });
-
-        if (response.data.profile) {
-          const { companyName, description, location, websiteUrl, industry, profileImage } = response.data.profile;
-          setCompanyName(companyName || '');
-          setDescription(description || '');
-          setLocation(location || '');
-          setWebsiteUrl(websiteUrl || '');
-          setIndustry(industry || '');
-          setProfileImage(profileImage || null);
-        } else {
-          console.error('Profile data not found');
-        }
-      } catch (err) {
-        console.error('Error fetching profile data.', err);
-        setError('Error fetching your profile data, please contact support for further assistance.');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProfile();
+    const savedProfile = JSON.parse(localStorage.getItem('employerProfile'));
+    if (savedProfile) {
+      setCompanyName(savedProfile.companyName);
+      setDescription(savedProfile.description);
+      setLocation(savedProfile.location);
+      setWebsiteUrl(savedProfile.websiteUrl);
+      setIndustry(savedProfile.industry);
+    }
   }, []);
 
-  const handleImageChange = (e) => {
-    setProfileImage(e.target.files[0]);
-  };
-
-  const handleSubmit = async (e) => {
+  // Handle form submission
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      const token = localStorage.getItem('token'); // Retrieve token from storage
-      const formData = new FormData();
-      formData.append('companyName', companyName);
-      formData.append('description', description);
-      formData.append('location', location);
-      formData.append('websiteUrl', websiteUrl);
-      formData.append('industry', industry);
-      if (profileImage) {
-        formData.append('profileImage', profileImage);
-      }
-
-      const response = await axios.patch('/api/employer/profile', formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data', // Important for file uploads
-        },
-      });
-
-      if (response.status === 200) {
-        setMessage(response.data.msg || 'Profile updated successfully'); // Set the success message
-      } else {
-        setError('Failed to update profile. Try again.'); // Set error message if not 200
-      }
-    } catch (error) {
-      setError('Failed to update profile. Try again.'); // Set error message
-    }
+    const profileData = { companyName, description, location, websiteUrl, industry };
+    localStorage.setItem('employerProfile', JSON.stringify(profileData));
+    setIsModalOpen(false);
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p className="error">{error}</p>;
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login');
+  };
 
   return (
-    <div className="container">
-      <h2>Employer Profile</h2>
-      <div>
-        {profileImage && (
-          <img
-            src={URL.createObjectURL(profileImage)}
-            alt="Profile"
-            style={{ width: '100px', height: '100px', objectFit: 'cover' }} // You can keep this inline for the image
-          />
-        )}
-        <h3>{companyName}</h3>
-        <p><strong>Description:</strong> {description}</p>
-        <p><strong>Location:</strong> {location}</p>
-        <p><strong>Website:</strong> {websiteUrl}</p>
-        <p><strong>Industry:</strong> {industry}</p>
+    <div className="dashboard-container">
+      {/* Sidebar */}
+      <div className="sidebar">
+        <h2>Dashboard</h2>
+        <nav>
+          <ul>
+            <li><Link to="/employer/jobs">My Jobs</Link></li>
+            <li><Link to="/employer/applications">Applications</Link></li>
+            <li><Link to="/post-job">Post A Job</Link></li>
+            <li><Link to="/employer/profile">Profile</Link></li>
+          </ul>
+        </nav>
       </div>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={companyName}
-          onChange={(e) => setCompanyName(e.target.value)}
-          placeholder="Company Name"
-          required
-        />
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Company Description"
-          required
-        />
-        <input
-          type="text"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          placeholder="Location"
-          required
-        />
-        <input
-          type="url"
-          value={websiteUrl}
-          onChange={(e) => setWebsiteUrl(e.target.value)}
-          placeholder="Website URL (optional)"
-        />
-        <input
-          type="text"
-          value={industry}
-          onChange={(e) => setIndustry(e.target.value)}
-          placeholder="Industry (optional)"
-        />
-        <input
-          type="file"
-          onChange={handleImageChange}
-        />
-        <button type="submit">Update Profile</button>
-      </form>
-      {error && <p className="error">{error}</p>}
-      {message && <p className="message">{message}</p>} {/* Display message */}
+
+      {/* Main content */}
+      <div className="main-content">
+        <div className="header">
+          <div className="profile-section">
+            <img src="path/to/profile-pic.jpg" alt="Profile" className="profile-pic" />
+            <div className="dropdown">
+              <button onClick={() => setDropdownOpen(!dropdownOpen)} className="dropdown-button">▼</button>
+              {dropdownOpen && (
+                <div className="dropdown-menu">
+                  <button onClick={handleLogout}>Logout</button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Profile details */}
+        <h3>Employer Profile</h3>
+        <div className="profile-details">
+          <p><strong>Company Name:</strong> {companyName}</p>
+          <p><strong>Description:</strong> {description}</p>
+          <p><strong>Location:</strong> {location}</p>
+          <p><strong>Website:</strong> {websiteUrl}</p>
+          <p><strong>Industry:</strong> {industry}</p>
+          <button className="edit-button" onClick={() => setIsModalOpen(true)}>Edit Profile</button>
+        </div>
+
+        {/* Modal for editing profile */}
+        {isModalOpen && (
+          <div className="modal">
+            <div className="modal-content">
+              <span className="close" onClick={() => setIsModalOpen(false)}>&times;</span>
+              <h3>Edit Employer Profile</h3>
+              <form onSubmit={handleSubmit}>
+                <div>
+                  <label>Company Name:</label>
+                  <input
+                    type="text"
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
+                    required
+                  />
+                </div>
+                <div>
+                  <label>Description:</label>
+                  <textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    required
+                  />
+                </div>
+                <div>
+                  <label>Location:</label>
+                  <input
+                    type="text"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    required
+                  />
+                </div>
+                <div>
+                  <label>Website:</label>
+                  <input
+                    type="url"
+                    value={websiteUrl}
+                    onChange={(e) => setWebsiteUrl(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label>Industry:</label>
+                  <input
+                    type="text"
+                    value={industry}
+                    onChange={(e) => setIndustry(e.target.value)}
+                  />
+                </div>
+                <button type="submit">Save Profile</button>
+              </form>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

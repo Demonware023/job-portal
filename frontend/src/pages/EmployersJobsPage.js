@@ -44,7 +44,7 @@ const EmployersJobsPage = () => {
         <h2>Dashboard</h2>
         <nav>
           <ul>
-            <li><Link to="/employer/jobs">Your Jobs</Link></li>
+            <li><Link to="/employer/jobs">My Jobs</Link></li>
             <li><Link to="/employer/applications">Applications</Link></li>
             <li><Link to="/post-job">Post Job</Link></li>
             <li><Link to="/employer/profile">Profile</Link></li>

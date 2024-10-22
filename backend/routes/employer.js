@@ -2,11 +2,13 @@ const express = require('express');
 const { check, validationResult } = require('express-validator'); // Import express-validator
 // const { registerEmployer, getEmployerProfile } = require('../controllers/employerController');
 const { authenticateEmployer, authenticateToken } = require('../middleware/auth'); // Adjust import path if needed
-const EmployerProfile = require('../models/EmployerProfile');
+// const EmployerProfile = require('../models/EmployerProfile');
 const Employer = require('../models/Employer'); // Adjust import path if needed
 const Job = require('../models/Job'); // Ensure the path to your Job model is correct
 const JobApplication = require('../models/JobApplication');
 const router = express.Router();
+const multer = require('multer');
+const path = require('path');
 
 // Middleware to verify user role
 /* const verifyRole = (requiredRole) => (req, res, next) => {
@@ -23,33 +25,71 @@ const router = express.Router();
 // router.get('/:id', getEmployerProfile);
 
 
+// Set up multer storage
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); // Save the file in the 'uploads' directory
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+
+const upload = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // limit file size to 5MB
+  fileFilter: (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg') {
+      return cb(new Error('Only images are allowed'), false);
+    }
+    cb(null, true);
+  },
+});
+
 // PATCH /api/employer/profile - Update employer profile
-router.patch('/profile',
+router.patch(
+  '/profile',
+  upload.single('profileImage'), // Handle file upload for 'profileImage'
   [
-      check('companyName').not().isEmpty().withMessage('Company Name is required'),
-      check('description').not().isEmpty().withMessage('Description is required'),
-      check('location').not().isEmpty().withMessage('Location is required'),
-      check('websiteUrl').optional().isURL().withMessage('Must be a valid URL'),
-      check('industry').optional().not().isEmpty().withMessage('Industry should not be empty if provided'),
+    check('companyName').not().isEmpty().withMessage('Company Name is required'),
+    check('description').not().isEmpty().withMessage('Description is required'),
+    check('location').not().isEmpty().withMessage('Location is required'),
+    check('websiteUrl').optional().isURL().withMessage('Must be a valid URL'),
+    check('industry').optional().not().isEmpty().withMessage('Industry should not be empty if provided'),
   ],
   authenticateToken,
   authenticateEmployer,
   async (req, res) => {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-          return res.status(400).json({ errors: errors.array() });
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { companyName, description, location, websiteUrl, industry } = req.body;
+    const profileImage = req.file ? req.file.filename : null; // Get the uploaded file's name, if present
+
+    try {
+      const updateData = { companyName, description, location, websiteUrl, industry };
+
+      // Only add profileImage if it's uploaded
+      if (profileImage) {
+        updateData.profileImage = profileImage;
       }
 
-      const { companyName, description, location, websiteUrl, industry } = req.body;
+      const employer = await Employer.findByIdAndUpdate(
+        req.employer.id,
+        updateData,
+        { new: true }
+      );
 
-      try {
-          const employer = await Employer.findByIdAndUpdate(req.employer.id, { companyName, description, location, websiteUrl, industry }, { new: true });
-          if (!employer) return res.status(404).json({ msg: 'Employer not found' });
-          res.status(200).json(employer);
-      } catch (err) {
-          console.error(err);
-          res.status(500).json({ msg: 'Server error' });
-      }
+      if (!employer) return res.status(404).json({ msg: 'Employer not found' });
+
+      res.status(200).json(employer);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ msg: 'Server error' });
+    }
   }
 );
 
