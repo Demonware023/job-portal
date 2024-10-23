@@ -15,7 +15,6 @@ const EmployerDashboard = () => {
         const response = await axios.get('/api/employer/jobs', {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });
-        console.log('Fetched jobs:', response.data);
         setJobs(response.data);
       } catch (error) {
         console.error('Error fetching jobs:', error);
@@ -98,24 +97,28 @@ const EmployerDashboard = () => {
                 <p>Location: {job.location}</p>
                 <h4>Applications</h4>
                 {job.applications && job.applications.length > 0 ? (
-                  job.applications.map(app => (
-                    <div key={app._id} className="application-card">
-                      <p>
-                        Applicant: {app.jobSeekerId ? `${app.jobSeekerId.name} (${app.jobSeekerId.email})` : 'Unknown Applicant'}
-                      </p>
-                      <p>Status: {app.status}</p>
-                      <p>Cover Letter: {app.coverLetter}</p>
-                      <p>Expected Pay: {app.expectedPay}</p>
-                      <button onClick={() => handleApplicationAction(job._id, app._id, 'accepted')}>Accept</button>
-                      <button onClick={() => handleApplicationAction(job._id, app._id, 'rejected')}>Reject</button>
-                    </div>
-                  ))
+                  <>
+                    {job.applications.slice(0, 3).map(app => ( // Show only the first 3 applications
+                      <div key={app._id} className="application-card">
+                        <p>
+                          Applicant: {app.jobSeekerId ? `${app.jobSeekerId.name} (${app.jobSeekerId.email})` : 'Unknown Applicant'}
+                        </p>
+                        <p>Status: {app.status}</p>
+                        <p>Cover Letter: {app.coverLetter}</p>
+                        <p>Expected Pay: {app.expectedPay}</p>
+                        <button onClick={() => handleApplicationAction(job._id, app._id, 'accepted')}>Accept</button>
+                        <button onClick={() => handleApplicationAction(job._id, app._id, 'rejected')}>Reject</button>
+                      </div>
+                    ))}
+                    {job.applications.length > 3 && (
+                      <Link to={`/employer/applications/${job._id}`}>
+                        <button className="view-applications-button">View All Applications</button>
+                      </Link>
+                    )}
+                  </>
                 ) : (
                   <p>No applications yet.</p>
                 )}
-                <Link to={`/employer/applications/${job._id}`}>
-                  <button className="view-applications-button">View Applications</button>
-                </Link>
               </div>
             )
           ))

@@ -1,7 +1,7 @@
 // src/App.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
@@ -45,17 +45,30 @@ function App() {
       <Router>
         <div className="App">
           <Routes>
+            {/* Home route with header */}
             <Route path="/" element={
               <>
                 <header className="App-header">
+                  <div className="app-banner">
+                    <div className="logo">
+                      <Link to="/">alx -- Job -- Portals</Link>
+                    </div>
+                    <div className="login-container">
+                      <Link to="/login" className="login-text">Login</Link>
+                      <Link to="/jobseeker/jobs">
+                        <button className="primary-btn">Find Jobs</button>
+                      </Link>
+                    </div>
+                  </div>
                   <h1>Alx -- Job -- Portals</h1>
                   <p>Welcome to Alx Job Portal</p>
-                  <p>Find your next job or hire top talent.</p>
+                  <p>Find your next job or hire top talent.</p> 
                   <p>{message}</p>
                 </header>
                 <Home message={message} />
               </>
             } />
+            {/* Other routes without the header */}
             <Route path="/jobs" element={<Jobs />} />
             <Route path="/login" element={<Login />} />
             <Route path="/landing-page" element={<LandingPage />} />

@@ -5,12 +5,73 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #282c34; /* Retain the original dark background */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: center; /* Center content vertically */
   font-size: calc(10px + 2vmin);
   color: white;
+  position: relative; /* To keep the banner within the header */
 }
+
+.app-banner {
+  display: flex; /* Flexbox layout for the banner */
+  align-items: center; /* Center items vertically */
+  justify-content: space-between; /* Space out items */
+  width: 100%; /* Full width */
+  padding: 20px; /* Padding around the banner */
+  position: absolute; /* Position the banner absolutely */
+  top: 20px; /* Move it down slightly from the top */
+}
+
+.logo {
+  font-size: 1.5em; /* Logo text size */
+  font-weight: bold; /* Logo boldness */
+  color: white; /* Logo text color */
+}
+
+.login-container {
+  display: flex; /* Flex container for login text and button */
+  align-items: center; /* Center items vertically */
+}
+
+.login-text {
+  font-size: 1.1em; /* Login text size */
+  color: white; /* Login text color */
+  text-decoration: none; /* Remove underline */
+  transition: color 0.3s; /* Smooth color transition */
+  margin-right: 20px; /* Space between login text and button */
+}
+
+.login-text:hover {
+  color: #5BC0EB; /* Change color on hover */
+}
+
+.primary-btn {
+  background-color: #5BC0EB; /* Button color */
+  border: none; /* Remove border */
+  border-radius: 30px; /* More oval shape */
+  color: white; /* Button text color */
+  padding: 15px 30px; /* Increased padding for a bigger button */
+  font-size: 1.2rem; /* Larger font size for button text */
+  transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
+}
+
+.primary-btn:hover {
+  background-color: #007BFF; /* Change color on hover */
+  transform: translateY(-2px); /* Slight lift effect on hover */
+}
+
+/* General styles for the app */
+h1 {
+  font-size: 2.5rem;
+  margin: 20px 0;
+}
+
+p {
+  font-size: 1.2rem;
+  margin: 10px 0;
+}
+

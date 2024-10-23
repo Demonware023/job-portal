@@ -80,7 +80,7 @@ router.patch(
       const employer = await Employer.findByIdAndUpdate(
         req.employer.id,
         updateData,
-        { new: true }
+        { new: true, runValidators: true } // Ensure validation is run and return updated document
       );
 
       if (!employer) return res.status(404).json({ msg: 'Employer not found' });

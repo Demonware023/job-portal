@@ -1,48 +1,50 @@
-// src/pages/Home.js
 import React, { useEffect, useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import { FaBriefcase, FaUserTie } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'; // Ensure this is imported
+import axios from 'axios';
 import './Home.css';
 
 const Home = () => {
-  const [message, setMessage] = useState('');
+  const [jobs, setJobs] = useState([]);
+  const [page, setPage] = useState(1); // Page state
+  const [totalPages, setTotalPages] = useState(0); // Total pages state
 
+  // Fetch jobs from the API
   useEffect(() => {
-    // Fetch the welcome message from the backend
-    const fetchMessage = async () => {
+    const fetchJobs = async () => {
       try {
-        const response = await fetch('/api/home'); // Assume your backend has this route
-        const data = await response.json();
-        setMessage(data.message);
+        const response = await axios.get(`/api/jobseeker/jobs?page=${page}&limit=10`);
+        setJobs((prevJobs) => [...prevJobs, ...response.data.jobs]); // Append new jobs to existing ones
+        setTotalPages(response.data.totalPages); // Update total pages
       } catch (error) {
-        console.error('Error fetching home message:', error);
-        setMessage('Failed to load message');
+        console.error('Error fetching jobs:', error);
       }
     };
 
-    fetchMessage();
-  }, []);
+    fetchJobs();
+  }, [page]); // Fetch jobs whenever the page changes
+
+  // Load more jobs when the button is clicked
+  const loadMoreJobs = () => {
+    if (page < totalPages) {
+      setPage(page + 1);
+    }
+  };
 
   return (
-    <Box sx={{ bgcolor: 'background.default', color: 'text.primary', minHeight: '100vh' }}>
-      {/* Header */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 2, boxShadow: 3 }}>
-        <Typography variant="h6" color="primary">
-          JobBoard
-        </Typography>
-        <Box>
-          <Link to="/login">
-            <Button sx={{ mr: 2 }} color="inherit">
-              Login
-            </Button>
-          </Link>
-          <Link to="/register-jobseeker">
-            <Button variant="contained" color="primary">
-              Sign Up
-            </Button>
-          </Link>
-        </Box>
+    <Box sx={{ bgcolor: 'background.default', color: 'text.primary', minHeight: '100vh', p: 4 }}>
+      {/* Button Section as part of the main page */}
+      <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4, boxShadow: 3, padding: 2, backgroundColor: '#fff', borderRadius: 2 }}>
+        <Button component={Link} to="/login" sx={{ mx: 2 }} variant="contained" color="primary" startIcon={<FaUserTie />}>
+          Login
+        </Button>
+        <Button component={Link} to="/register-employer" sx={{ mx: 2 }} variant="contained" color="primary" startIcon={<FaUserTie />}>
+          Register Employer
+        </Button>
+        <Button component={Link} to="/register-jobseeker" sx={{ mx: 2 }} variant="contained" color="primary" startIcon={<FaUserTie />}>
+          Register Jobseeker
+        </Button>
       </Box>
 
       {/* Hero Section */}
@@ -68,7 +70,7 @@ const Home = () => {
           Find your next tech job or hire the best talent in the industry.
         </Typography>
         <Typography variant="body1" sx={{ mt: 2 }}>
-          {message}
+          {/* Add your message here */}
         </Typography>
         <Box sx={{ mt: 4 }}>
           <Link to="/post-job">
@@ -82,7 +84,7 @@ const Home = () => {
               Post a Job
             </Button>
           </Link>
-          <Link to="/jobs">
+          <Link to="/jobseeker/jobs">
             <Button
               variant="outlined"
               size="large"
@@ -93,6 +95,35 @@ const Home = () => {
             </Button>
           </Link>
         </Box>
+      </Box>
+
+      {/* Job Listings Section */}
+      <Box className="jobs-list">
+        <Typography variant="h5" sx={{ mb: 2 }}>
+          Latest Jobs
+        </Typography>
+        <Box>
+          {jobs.length > 0 ? (
+            jobs.map((job, index) => (
+              <Box key={index} className="job-item" sx={{ borderBottom: '1px solid #ccc', mb: 3, pb: 2 }}>
+                <Typography variant="h6">{job.title}</Typography>
+                <Typography variant="body2">{job.location}</Typography>
+                <Button variant="contained" color="primary" sx={{ mt: 1 }} startIcon={<FaUserTie />}>
+                  Apply Now
+                </Button>
+              </Box>
+            ))
+          ) : (
+            <Typography variant="body1">No jobs available at the moment.</Typography>
+          )}
+        </Box>
+
+        {/* Load More Button */}
+        {page < totalPages && (
+          <Button variant="contained" color="primary" onClick={loadMoreJobs} sx={{ mt: 4 }}>
+            Load More Jobs
+          </Button>
+        )}
       </Box>
 
       {/* Footer */}
