@@ -195,7 +195,12 @@ router.delete('/jobs/:id', authenticateToken, authenticateEmployer, async (req, 
     const job = await Job.findById(req.params.id);
     if (!job) return res.status(404).json({ msg: 'Job not found' });
 
-    await job.remove();
+    // Option 1: Use deleteOne
+    await Job.deleteOne({ _id: req.params.id });
+    
+    // Option 2: Use findByIdAndDelete
+    // await Job.findByIdAndDelete(req.params.id);
+
     res.json({ msg: 'Job removed' });
   } catch (error) {
     console.error('Error deleting job:', error);

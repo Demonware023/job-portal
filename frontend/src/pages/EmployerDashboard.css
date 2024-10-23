@@ -1,58 +1,13 @@
-/* Main content styles */
-.main-content {
-  flex: 1;
-  padding: 20px;
-  background-color: #ecf0f1;
+/* Dashboard container */
+.dashboard-container {
   display: flex;
-  flex-wrap: wrap; /* Ensure job cards wrap */
-  gap: 20px; /* Space between job cards */
-  justify-content: flex-start;
-  align-items: flex-start;
+  height: 100vh; /* Full height of the viewport */
 }
 
-/* Job card styling */
-.job-card {
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 20px;
-  box-sizing: border-box;
-  flex: 1 0 300px; /* Ensures all boxes are of similar size */
-  margin: 10px;
-  height: 400px; /* Fixed height for job cards */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between; /* Space out contents vertically */
-}
-
-/* Application card */
-.application-card {
-  background-color: #f9f9f9;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 10px;
-  margin-top: 10px;
-}
-
-/* View applications button */
-.view-applications-button {
-  background-color: #3498db;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-.view-applications-button:hover {
-  background-color: #2980b9;
-}
-
-/* Sidebar */
+/* Sidebar styles */
 .sidebar {
-  width: 250px;
-  background-color: #2c3e50;
+  width: 250px; /* Width of the sidebar */
+  background-color: #2c3e50; /* Dark background */
   color: white;
   padding: 20px;
   overflow-y: auto; /* Allow sidebar to scroll if content overflows */
@@ -80,19 +35,59 @@
   text-decoration: underline;
 }
 
-/* Header */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+/* Main content styles */
+.main-content {
+  flex: 1; /* Take the remaining space */
+  padding: 20px; /* Adjust padding for a clean look */
+  background-color: #ecf0f1; /* Light background */
+  display: flex; /* Change to flex for horizontal layout */
+  flex-direction: row; /* Arrange content in a column */
+  align-items: flex-start; /* Align items to the start */
 }
 
-/* Profile section */
+/* Profile section styles */
+.profile-section {
+  display: flex; /* Flex layout for profile */
+  align-items: center; /* Center align vertically */
+  margin-bottom: 20px; /* Space below profile section */
+  width: 100%; /* Full width */
+}
+
+/* Profile picture */
 .profile-pic {
   width: 40px;
   height: 40px;
   border-radius: 50%;
+  margin-right: 10px; /* Space between picture and name */
+}
+
+/* Job card styles */
+.job-card {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px !important;
+  padding: 10px !important;
+  width: calc(30% - 20px); /* Adjust width for 3 columns */
+  box-sizing: border-box; /* Ensure padding and borders are included in width */
+  margin: 10px; /* Reduce margin for a cleaner grid */
+  display: flex; /* Use flexbox for content alignment */
+  flex-direction: row; /* Align children in a column */
+  justify-content: flex-start; /* Align children at the start */
+}
+
+/* Applications container */
+.applications-container {
+  display: flex;
+  flex-wrap: wrap; /* Wrap job cards to next line */
+  justify-content: flex-start; /* Align items to the start */
+}
+
+/* Header styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px; /* Add this line to create space below the header */
 }
 
 .dropdown {
@@ -132,15 +127,12 @@
   background-color: #f0f0f0;
 }
 
-/* Flexbox to ensure job and application boxes align properly */
-.job-card,
-.application-card {
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 15px;
-  margin: 10px 0;
-  width: calc(50% - 20px); /* Half width for each card, with margin */
-  box-sizing: border-box;
+/* Media query for responsiveness */
+@media (max-width: 768px) {
+  .job-card {
+    width: calc(100% - 20px); /* Full width for smaller screens */
+  }
+  .main-content {
+    padding: 10px; /* Less padding on smaller screens */
+  }
 }
-

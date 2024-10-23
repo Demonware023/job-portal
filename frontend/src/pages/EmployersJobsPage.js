@@ -5,6 +5,10 @@ import './EmployersJobsPage.css';
 
 const EmployersJobsPage = () => {
   const [jobs, setJobs] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [jobToDelete, setJobToDelete] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,9 +37,36 @@ const EmployersJobsPage = () => {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       setJobs(jobs.filter(job => job._id !== jobId));
+      setIsDeleteModalOpen(false); // Close the delete modal after deletion
     } catch (error) {
       console.error('Error deleting job:', error);
     }
+  };
+
+  // Handle modal open and setting the selected job
+  const handleUpdateJob = (job) => {
+    setSelectedJob(job);
+    setIsModalOpen(true);
+  };
+
+  // Handle job update
+  const handleJobUpdate = async (updatedJob) => {
+    try {
+      const response = await axios.put(`/api/employer/jobs/${updatedJob._id}`, updatedJob, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
+      setJobs(jobs.map(job => (job._id === response.data._id ? response.data : job))); // Update the job in the list
+      setIsModalOpen(false);
+      setSelectedJob(null);
+    } catch (error) {
+      console.error('Error updating job:', error);
+    }
+  };
+
+  // Open the delete confirmation modal
+  const confirmDeleteJob = (jobId) => {
+    setJobToDelete(jobId);
+    setIsDeleteModalOpen(true);
   };
 
   return (
@@ -61,12 +92,10 @@ const EmployersJobsPage = () => {
               <p>{job.description}</p>
               <p>Location: {job.location}</p>
               <div className="job-actions">
-                <Link to={`/update-job/${job._id}`}>
-                  <button className="update-job-button">Update Job</button>
-                </Link>
+                <button className="update-job-button" onClick={() => handleUpdateJob(job)}>Update Job</button>
                 <button 
                   className="delete-job-button" 
-                  onClick={() => handleDeleteJob(job._id)}
+                  onClick={() => confirmDeleteJob(job._id)} // Use confirmDeleteJob
                 >
                   Delete Job
                 </button>
@@ -80,6 +109,66 @@ const EmployersJobsPage = () => {
           <p>No jobs found.</p>
         )}
       </div>
+
+      {isModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={() => setIsModalOpen(false)}>&times;</span>
+            <h2>Update Job</h2>
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              handleJobUpdate(selectedJob);
+            }}>
+              <input
+                type="text"
+                name="title"
+                value={selectedJob?.title || ''}
+                onChange={(e) => setSelectedJob({ ...selectedJob, title: e.target.value })}
+                placeholder="Job Title"
+                required
+              />
+              <textarea
+                name="description"
+                value={selectedJob?.description || ''}
+                onChange={(e) => setSelectedJob({ ...selectedJob, description: e.target.value })}
+                placeholder="Job Description"
+                required
+              />
+              <input
+                type="text"
+                name="location"
+                value={selectedJob?.location || ''}
+                onChange={(e) => setSelectedJob({ ...selectedJob, location: e.target.value })}
+                placeholder="Location"
+                required
+              />
+              <input
+                type="number"
+                name="pay"
+                value={selectedJob?.pay || ''}
+                onChange={(e) => setSelectedJob({ ...selectedJob, pay: e.target.value })}
+                placeholder="Pay"
+                required
+              />
+              <button type="submit">Update Job</button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {isDeleteModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={() => setIsDeleteModalOpen(false)}>&times;</span>
+            <h2>Are you sure you want to delete this job?</h2>
+            <div className="modal-actions">
+              <button className="delete-job-button" onClick={() => handleDeleteJob(jobToDelete)}>Yes</button>
+              <button className="cancel-button" onClick={() => setIsDeleteModalOpen(false)}>No</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

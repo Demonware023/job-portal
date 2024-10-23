@@ -15,6 +15,7 @@ const EmployerDashboard = () => {
         const response = await axios.get('/api/employer/jobs', {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });
+        console.log('Fetched jobs:', response.data);
         setJobs(response.data);
       } catch (error) {
         console.error('Error fetching jobs:', error);
@@ -40,16 +41,20 @@ const EmployerDashboard = () => {
     fetchApplications();
   }, []);
 
-  const handleApplicationAction = async (jobId, appId, status) => {
+  // Handle application status updates
+  const handleApplicationAction = async (appId, status, jobId) => {
     try {
-      const response = await axios.patch(`/api/employer/jobs/${jobId}/applications/${appId}`, { status });
-      alert(response.data.msg);
-      const updatedApplications = applications.map((app) => 
-        app._id === appId ? { ...app, status } : app
+      const response = await axios.patch(`/api/employer/jobs/${jobId}/applications/${appId}`, 
+        { status },
+        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } } // Include token here
       );
-      setApplications(updatedApplications);
+      alert(response.data.msg);
+      setApplications((prev) =>
+        prev.map((app) => (app._id === appId ? { ...app, status } : app))
+      );
     } catch (error) {
       alert('Failed to update application status.');
+      console.error('Error updating application status:', error); // Log the error for debugging
     }
   };
 
@@ -90,7 +95,7 @@ const EmployerDashboard = () => {
         <h2>Available Jobs</h2>
         {jobs.length > 0 ? (
           jobs.map(job => (
-            job && ( // Check if job exists before accessing properties
+            job && (
               <div key={job._id} className="job-card">
                 <h2>{job.title}</h2>
                 <p>{job.description}</p>
@@ -98,7 +103,7 @@ const EmployerDashboard = () => {
                 <h4>Applications</h4>
                 {job.applications && job.applications.length > 0 ? (
                   <>
-                    {job.applications.slice(0, 3).map(app => ( // Show only the first 3 applications
+                    {job.applications.slice(0, 2).map(app => (
                       <div key={app._id} className="application-card">
                         <p>
                           Applicant: {app.jobSeekerId ? `${app.jobSeekerId.name} (${app.jobSeekerId.email})` : 'Unknown Applicant'}
@@ -110,7 +115,7 @@ const EmployerDashboard = () => {
                         <button onClick={() => handleApplicationAction(job._id, app._id, 'rejected')}>Reject</button>
                       </div>
                     ))}
-                    {job.applications.length > 3 && (
+                    {job.applications.length > 2 && (
                       <Link to={`/employer/applications/${job._id}`}>
                         <button className="view-applications-button">View All Applications</button>
                       </Link>
@@ -119,6 +124,9 @@ const EmployerDashboard = () => {
                 ) : (
                   <p>No applications yet.</p>
                 )}
+                <Link to={`/employer/applications/${job._id}`}>
+                  <button className="view-applications-button">View Applications</button>
+                </Link>
               </div>
             )
           ))

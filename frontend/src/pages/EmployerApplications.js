@@ -43,7 +43,7 @@ const EmployerApplications = () => {
   // Function to fetch applications by job ID
   const fetchApplications = async (jobId) => {
     try {
-      const response = await axios.get(`/api/employers/jobs/${jobId}/applications`, {
+      const response = await axios.get(`/api/employer/jobs/${jobId}/applications`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       setApplications(response.data);
@@ -79,9 +79,9 @@ const EmployerApplications = () => {
   };
 
   // Handle application status updates
-  const handleApplicationAction = async (appId, status) => {
+  const handleApplicationAction = async (appId, status, jobId) => {
     try {
-      const response = await axios.patch(`/api/employers/applications/${appId}`, { status });
+      const response = await axios.patch(`/api/employer/jobs/${jobId}/applications/${appId}`, { status });
       alert(response.data.msg);
       setApplications((prev) =>
         prev.map((app) => (app._id === appId ? { ...app, status } : app))
@@ -151,8 +151,8 @@ const EmployerApplications = () => {
                     <p>Status: {app.status}</p>
                     <p>Cover Letter: {app.coverLetter}</p>
                     <p>Expected Pay: {app.expectedPay}</p>
-                    <button onClick={() => handleApplicationAction(app._id, 'accepted')}>Accept</button>
-                    <button onClick={() => handleApplicationAction(app._id, 'rejected')}>Reject</button>
+                    <button onClick={() => handleApplicationAction(app._id, 'accepted', selectedJob._id)}>Accept</button>
+                    <button onClick={() => handleApplicationAction(app._id, 'rejected', selectedJob._id)}>Reject</button>
                   </div>
                 ))
               ) : (
