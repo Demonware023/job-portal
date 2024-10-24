@@ -211,17 +211,17 @@ router.delete('/jobs/:id', authenticateToken, authenticateEmployer, async (req, 
 // PATCH /api/jobs/:jobId/applications/:appId - Update application status (restricted to authenticated employers)
 router.patch('/jobs/:jobId/applications/:appId', authenticateToken, authenticateEmployer, async (req, res) => {
   const { jobId, appId } = req.params;
+  console.log('Job ID:', jobId, 'Application ID:', appId); // Debugging line to log received IDs
   const { status } = req.body; // Status can be "accepted" or "rejected"
 
   try {
-    const job = await Job.findById(jobId);
-    if (!job) return res.status(404).json({ msg: 'Job not found' });
-
-    const application = job.applications.id(appId);
+    // Find the job application in the JobApplication collection
+    const application = await JobApplication.findOne({ _id: appId, jobId });
     if (!application) return res.status(404).json({ msg: 'Application not found' });
 
+    // Update the application status
     application.status = status;
-    await job.save();
+    await application.save();
 
     res.status(200).json({ msg: `Application ${status}` });
   } catch (err) {
@@ -229,6 +229,7 @@ router.patch('/jobs/:jobId/applications/:appId', authenticateToken, authenticate
     res.status(500).json({ msg: 'Server error' });
   }
 });
+
 
 // GET /api/employers/jobs/:jobId/applications - Fetch applications for a specific job
 router.get('/jobs/:jobId/applications', authenticateToken, authenticateEmployer, async (req, res) => {

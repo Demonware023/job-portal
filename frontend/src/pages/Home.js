@@ -15,7 +15,15 @@ const Home = () => {
     const fetchJobs = async () => {
       try {
         const response = await axios.get(`/api/jobseeker/jobs?page=${page}&limit=10`);
-        setJobs((prevJobs) => [...prevJobs, ...response.data.jobs]); // Append new jobs to existing ones
+        const newJobs = response.data.jobs;
+
+        // Filter out duplicates before updating state
+        setJobs((prevJobs) => {
+          const existingJobIds = new Set(prevJobs.map((job) => job.id)); // Assuming each job has a unique 'id'
+          const filteredNewJobs = newJobs.filter((job) => !existingJobIds.has(job.id));
+          return [...prevJobs, ...filteredNewJobs]; // Append new unique jobs to existing ones
+        });
+
         setTotalPages(response.data.totalPages); // Update total pages
       } catch (error) {
         console.error('Error fetching jobs:', error);
@@ -69,28 +77,15 @@ const Home = () => {
         <Typography variant="h6" gutterBottom>
           Find your next tech job or hire the best talent in the industry.
         </Typography>
-        <Typography variant="body1" sx={{ mt: 2 }}>
-          {/* Add your message here */}
-        </Typography>
+        <Typography variant="body1" sx={{ mt: 2 }} />
         <Box sx={{ mt: 4 }}>
           <Link to="/post-job">
-            <Button
-              variant="contained"
-              size="large"
-              color="primary"
-              startIcon={<FaBriefcase />}
-              sx={{ mr: 2 }}
-            >
+            <Button variant="contained" size="large" color="primary" startIcon={<FaBriefcase />} sx={{ mr: 2 }}>
               Post a Job
             </Button>
           </Link>
           <Link to="/jobseeker/jobs">
-            <Button
-              variant="outlined"
-              size="large"
-              color="primary"
-              startIcon={<FaUserTie />}
-            >
+            <Button variant="outlined" size="large" color="primary" startIcon={<FaUserTie />}>
               Find a Job
             </Button>
           </Link>
@@ -104,8 +99,8 @@ const Home = () => {
         </Typography>
         <Box>
           {jobs.length > 0 ? (
-            jobs.map((job, index) => (
-              <Box key={index} className="job-item" sx={{ borderBottom: '1px solid #ccc', mb: 3, pb: 2 }}>
+            jobs.map((job) => (
+              <Box key={job.id} className="job-item" sx={{ borderBottom: '1px solid #ccc', mb: 3, pb: 2 }}>
                 <Typography variant="h6">{job.title}</Typography>
                 <Typography variant="body2">{job.location}</Typography>
                 <Button variant="contained" color="primary" sx={{ mt: 1 }} startIcon={<FaUserTie />}>

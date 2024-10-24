@@ -1,138 +1,177 @@
-/* Dashboard container */
+/* Global styling */
 .dashboard-container {
   display: flex;
-  height: 100vh; /* Full height of the viewport */
+  height: 100vh;
+  background-color: #f0f2f5; /* Light background */
 }
 
-/* Sidebar styles */
+/* Sidebar */
 .sidebar {
-  width: 250px; /* Width of the sidebar */
-  background-color: #2c3e50; /* Dark background */
+  width: 250px;
+  background-color: #1c2533; /* Dark sidebar */
   color: white;
   padding: 20px;
-  overflow-y: auto; /* Allow sidebar to scroll if content overflows */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .sidebar h2 {
+  color: #ffffff;
+  margin-bottom: 40px;
   text-align: center;
 }
 
 .sidebar nav ul {
   list-style-type: none;
   padding: 0;
+  width: 100%;
 }
 
 .sidebar nav ul li {
-  margin: 15px 0;
+  margin: 20px 0;
 }
 
 .sidebar nav ul li a {
-  color: white;
+  display: block;
+  padding: 10px 15px;
+  color: #ffffff;
+  background-color: #007bff; /* Button-like links */
+  text-align: center;
   text-decoration: none;
+  border-radius: 8px;
+  transition: background-color 0.3s;
 }
 
 .sidebar nav ul li a:hover {
-  text-decoration: underline;
+  background-color: #0056b3;
 }
 
-/* Main content styles */
+/* Main content */
 .main-content {
-  flex: 1; /* Take the remaining space */
-  padding: 20px; /* Adjust padding for a clean look */
-  background-color: #ecf0f1; /* Light background */
-  display: flex; /* Change to flex for horizontal layout */
-  flex-direction: row; /* Arrange content in a column */
-  align-items: flex-start; /* Align items to the start */
+  flex-grow: 1;
+  padding: 30px;
+  display: flex;  /* Add display flex */
+  flex-direction: column;  /* Keep items in a column */
 }
 
-/* Profile section styles */
-.profile-section {
-  display: flex; /* Flex layout for profile */
-  align-items: center; /* Center align vertically */
-  margin-bottom: 20px; /* Space below profile section */
-  width: 100%; /* Full width */
-}
-
-/* Profile picture */
-.profile-pic {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 10px; /* Space between picture and name */
-}
-
-/* Job card styles */
-.job-card {
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 4px !important;
-  padding: 10px !important;
-  width: calc(30% - 20px); /* Adjust width for 3 columns */
-  box-sizing: border-box; /* Ensure padding and borders are included in width */
-  margin: 10px; /* Reduce margin for a cleaner grid */
-  display: flex; /* Use flexbox for content alignment */
-  flex-direction: row; /* Align children in a column */
-  justify-content: flex-start; /* Align children at the start */
-}
-
-/* Applications container */
-.applications-container {
-  display: flex;
-  flex-wrap: wrap; /* Wrap job cards to next line */
-  justify-content: flex-start; /* Align items to the start */
-}
-
-/* Header styles */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px; /* Add this line to create space below the header */
+  padding: 20px;
+  background-color: #007bff; /* Blue header */
+  color: white;
+  border-radius: 10px;
 }
 
-.dropdown {
-  display: inline-block;
+.header .profile-section {
+  display: flex;
+  align-items: center;
 }
 
-.dropdown-button {
+.header .profile-section .profile-pic {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.header .dropdown {
+  position: relative;
+}
+
+.header .dropdown .dropdown-button {
   background: none;
   border: none;
-  color: #3498db;
+  color: white;
+  font-size: 20px;
   cursor: pointer;
-  font-size: 16px;
 }
 
-.dropdown-menu {
+.header .dropdown .dropdown-menu {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background-color: white;
+  color: black;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+}
+
+.header h2 {
+  margin: 0;
+}
+
+/* Job cards container */
+.job-cards-container {
+  display: flex;  /* Keep content in a row */
+  flex-direction: row;  /* Keep content in a row */
+  align-items: flex-start;  /* Align items to the start */
+  flex-wrap: wrap;  /* Allow job cards to wrap */
+  gap: 20px;  /* Optional: Adds space between job cards */
+}
+
+/* Job card */
+.job-card {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  flex: 1 1 calc(33.33% - 20px);  /* Flex basis for 3 items in a row, adjust as necessary */
+  max-width: calc(33.33% - 20px);  /* Prevents cards from being too wide */
+}
+
+.job-card h2 {
+  margin-top: 0;
+}
+
+/* Application card */
+.application-card {
+  background-color: #f9f9f9;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.view-applications-button, .apply-button {
+  margin-top: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.view-applications-button:hover, .apply-button:hover {
+  background-color: #0056b3;
+}
+
+/* Profile dropdown */
+.profile-dropdown {
+  position: relative;
+}
+
+.profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
   position: absolute;
   right: 0;
-  top: 100%;
   background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 10px;
-  z-index: 1000; /* Ensures it appears above other elements */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.dropdown-menu button {
-  background: none;
-  border: none;
-  color: #3498db;
-  cursor: pointer;
-  padding: 5px 10px;
-  text-align: left;
-}
-
-.dropdown-menu button:hover {
-  background-color: #f0f0f0;
-}
-
-/* Media query for responsiveness */
-@media (max-width: 768px) {
-  .job-card {
-    width: calc(100% - 20px); /* Full width for smaller screens */
-  }
-  .main-content {
-    padding: 10px; /* Less padding on smaller screens */
-  }
+.profile-dropdown:hover .dropdown-content {
+  display: block;
 }

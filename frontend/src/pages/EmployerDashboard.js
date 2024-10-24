@@ -27,9 +27,11 @@ const EmployerDashboard = () => {
         const response = await axios.get('/api/employer/applications', {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });
+        console.log('Fetched applications:', response.data);
         const applications = response.data.map(app => ({
           ...app,
           jobSeekerId: app.jobSeekerId,
+          _id: app._id
         }));
         setApplications(applications);
       } catch (error) {
@@ -43,10 +45,19 @@ const EmployerDashboard = () => {
 
   // Handle application status updates
   const handleApplicationAction = async (appId, status, jobId) => {
+    console.log('Handling application action:', { appId, status, jobId }); // Debugging line
+
+    // Check if appId is defined
+    if (!appId) {
+      console.error('Application ID is undefined');
+      alert('Application ID is undefined. Cannot update status.');
+      return;
+    }
+
     try {
       const response = await axios.patch(`/api/employer/jobs/${jobId}/applications/${appId}`, 
         { status },
-        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } } // Include token here
+        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
       );
       alert(response.data.msg);
       setApplications((prev) =>
@@ -67,6 +78,7 @@ const EmployerDashboard = () => {
     <div className="dashboard-container">
       <div className="sidebar">
         <h2>Dashboard</h2>
+        <img src="./images/portal.jpg" alt="Logo" style={{ width: '100px', marginBottom: '20px' }} />
         <nav>
           <ul>
             <li><Link to="/employer/jobs">My Jobs</Link></li>
@@ -78,8 +90,9 @@ const EmployerDashboard = () => {
       </div>
       <div className="main-content">
         <div className="header">
+          <h2>Your Jobs</h2>
           <div className="profile-section">
-            <img src="path/to/profile-pic.jpg" alt="Profile" className="profile-pic" />
+            <img src="../images/portal.jpg" alt="Profile" className="profile-pic" />
             <div className="dropdown">
               <button onClick={() => setDropdownOpen(!dropdownOpen)} className="dropdown-button">▼</button>
               {dropdownOpen && (
@@ -89,50 +102,51 @@ const EmployerDashboard = () => {
               )}
             </div>
           </div>
-          <h2>Your Jobs</h2>
         </div>
 
-        <h2>Available Jobs</h2>
-        {jobs.length > 0 ? (
-          jobs.map(job => (
-            job && (
-              <div key={job._id} className="job-card">
-                <h2>{job.title}</h2>
-                <p>{job.description}</p>
-                <p>Location: {job.location}</p>
-                <h4>Applications</h4>
-                {job.applications && job.applications.length > 0 ? (
-                  <>
-                    {job.applications.slice(0, 2).map(app => (
-                      <div key={app._id} className="application-card">
-                        <p>
-                          Applicant: {app.jobSeekerId ? `${app.jobSeekerId.name} (${app.jobSeekerId.email})` : 'Unknown Applicant'}
-                        </p>
-                        <p>Status: {app.status}</p>
-                        <p>Cover Letter: {app.coverLetter}</p>
-                        <p>Expected Pay: {app.expectedPay}</p>
-                        <button onClick={() => handleApplicationAction(job._id, app._id, 'accepted')}>Accept</button>
-                        <button onClick={() => handleApplicationAction(job._id, app._id, 'rejected')}>Reject</button>
-                      </div>
-                    ))}
-                    {job.applications.length > 2 && (
-                      <Link to={`/employer/applications/${job._id}`}>
-                        <button className="view-applications-button">View All Applications</button>
-                      </Link>
-                    )}
-                  </>
-                ) : (
-                  <p>No applications yet.</p>
-                )}
-                <Link to={`/employer/applications/${job._id}`}>
-                  <button className="view-applications-button">View Applications</button>
-                </Link>
-              </div>
-            )
-          ))
-        ) : (
-          <p>No jobs found.</p>
-        )}
+        <h2>Active Jobs ({jobs.length})</h2>
+        <div className="job-cards-container">
+          {jobs.length > 0 ? (
+            jobs.map(job => (
+              job && (
+                <div key={job._id} className="job-card">
+                  <h2>{job.title}</h2>
+                  <p>{job.description}</p>
+                  <p>Location: {job.location}</p>
+                  <h4>Applications</h4>
+                  {job.applications && job.applications.length > 0 ? (
+                    <>
+                      {job.applications.slice(0, 2).map(app => (
+                        <div key={app._id} className="application-card">
+                          <p>
+                            Applicant: {app.jobSeekerId ? `${app.jobSeekerId.name} (${app.jobSeekerId.email})` : 'Unknown Applicant'}
+                          </p>
+                          <p>Status: {app.status}</p>
+                          <p>Cover Letter: {app.coverLetter}</p>
+                          <p>Expected Pay: {app.expectedPay}</p>
+                          <button onClick={() => handleApplicationAction(app._id, 'accepted', job._id)}>Accept</button>
+                          <button onClick={() => handleApplicationAction(app._id, 'rejected', job._id)}>Reject</button>
+                        </div>
+                      ))}
+                      {job.applications.length > 2 && (
+                        <Link to={`/employer/applications/${job._id}`}>
+                          <button className="view-applications-button">View All Applications</button>
+                        </Link>
+                      )}
+                    </>
+                  ) : (
+                    <p>No applications yet.</p>
+                  )}
+                  <Link to={`/employer/applications/${job._id}`}>
+                    <button className="view-applications-button">View Applications</button>
+                  </Link>
+                </div>
+              )
+            ))
+          ) : (
+            <p>No jobs found.</p>
+          )}
+        </div>
       </div>
     </div>
   );
