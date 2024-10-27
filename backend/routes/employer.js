@@ -2,7 +2,7 @@ const express = require('express');
 const { check, validationResult } = require('express-validator'); // Import express-validator
 // const { registerEmployer, getEmployerProfile } = require('../controllers/employerController');
 const { authenticateEmployer, authenticateToken } = require('../middleware/auth'); // Adjust import path if needed
-// const EmployerProfile = require('../models/EmployerProfile');
+const EmployerProfile = require('../models/EmployerProfile');
 const Employer = require('../models/Employer'); // Adjust import path if needed
 const Job = require('../models/Job'); // Ensure the path to your Job model is correct
 const JobApplication = require('../models/JobApplication');
@@ -47,6 +47,40 @@ const upload = multer({
   },
 });
 
+// Route to get the employer profile
+router.get('/profile', authenticateToken, authenticateEmployer, async (req, res) => {
+  try {
+    const employerId = req.employer.id; // Extract employer ID from the request
+
+    console.log('Fetching profile for employer ID:', employerId);
+
+    // Check if employer ID exists and is valid
+    if (!employerId) {
+      return res.status(400).json({ error: 'Invalid employer ID.' });
+    }
+
+    // Attempt to find the employer profile
+    const employerProfile = await EmployerProfile.findOne({ employerId });
+
+    // Debug logging to check the fetched profile
+    console.log('Fetched employer profile:', employerProfile);
+
+    // Check if the profile exists
+    if (!employerProfile) {
+      return res.status(404).json({ error: 'Employer profile not found.' });
+    }
+
+    console.log('Employer profile found:', employerProfile);
+
+    // Send the profile data back
+    res.json(employerProfile);
+  } catch (error) {
+    console.error('Error fetching employer profile:', error);
+    res.status(500).json({ error: 'Server error fetching profile.' });
+  }
+});
+
+
 // PATCH /api/employer/profile - Update employer profile
 router.patch(
   '/profile',
@@ -66,6 +100,7 @@ router.patch(
       return res.status(400).json({ errors: errors.array() });
     }
 
+    const employerId = req.employer.id;
     const { companyName, description, location, websiteUrl, industry } = req.body;
     const profileImage = req.file ? req.file.filename : null; // Get the uploaded file's name, if present
 
@@ -77,38 +112,22 @@ router.patch(
         updateData.profileImage = profileImage;
       }
 
-      const employer = await Employer.findByIdAndUpdate(
-        req.employer.id,
+      const employerProfile = await EmployerProfile.findOneAndUpdate(
+        { employerId }, // Find by employerId
         updateData,
         { new: true, runValidators: true } // Ensure validation is run and return updated document
       );
 
-      if (!employer) return res.status(404).json({ msg: 'Employer not found' });
+      if (!employerProfile) return res.status(404).json({ msg: 'Employer profile not found' });
 
-      res.status(200).json(employer);
+      res.status(200).json(employerProfile);
     } catch (err) {
-      console.error(err);
+      console.error('Error updating employer profile:', err);
       res.status(500).json({ msg: 'Server error' });
     }
   }
 );
 
-// GET /api/employer/profile - Get employer profile
-router.get('/profile', authenticateToken, authenticateEmployer, async (req, res) => {
-  try {
-    const employerId = req.employer.id; // Use req.employer.id as per your setup
-    const employer = await Employer.findById(employerId); // Fetch employer by ID
-
-    if (!employer) {
-      return res.status(404).json({ error: 'Employer not found.' });
-    }
-    
-    res.json({ profile: employer }); // Send the profile data back
-  } catch (error) {
-    console.error('Error fetching employer profile:', error);
-    res.status(500).json({ error: 'Server error fetching profile.' });
-  }
-});
 
 // POST /api/employer/jobs - Job posting (restricted to authenticated employers)
 router.post(
@@ -236,70 +255,44 @@ router.get('/jobs/:jobId/applications', authenticateToken, authenticateEmployer,
   try {
     const jobId = req.params.jobId;
 
-    // Fetch job details to get employer information
-    const job = await Job.findById(jobId).populate('employerId', 'companyName');
+    // Verify job ownership and fetch applications
+    const job = await Job.findOne({ _id: jobId, employerId: req.employer.id });
+    if (!job) return res.status(404).json({ msg: 'Job not found or unauthorized access.' });
 
-    if (!job) return res.status(404).json({ msg: 'Job not found.' });
-
-    // Fetch applications for the specific job
-    const applications = await JobApplication.find({ jobId })
-      .populate('jobSeekerId', 'name email') // Populate job seeker details
-      .populate({ path: 'jobId', select: 'title' }); // Populate job title
+    // Fetch all applications for this job without population
+    const applications = await JobApplication.find({ jobId });
 
     if (!applications.length) return res.status(404).json({ msg: 'No applications found for this job.' });
 
-/*     // Prepare the response with job and employer details
-    const sanitizedApplications = applications.map(app => ({
-      id: app._id,
-      jobId: app.jobId.title,
-      jobSeeker: app.jobSeekerId ? { name: app.jobSeekerId.name, email: app.jobSeekerId.email } : null,
-      employer: job.employerId ? { companyName: job.employerId.companyName } : null, // Include employer details
-      // Include other fields you might want to add
-    })); */
-
-    res.status(200).json(sanitizedApplications);
+    res.status(200).json(applications);
   } catch (err) {
     console.error('Error fetching applications for job:', err);
     res.status(500).json({ msg: 'Server error' });
   }
 });
 
-// GET /api/employer/applications - Fetch job applications for jobs posted by the employer
+// GET /api/employer/applications - Fetch applications for jobs posted by the employer
 router.get('/applications', authenticateToken, authenticateEmployer, async (req, res) => {
   try {
-    const employerId = req.employer.id; // Assuming employer is authenticated
+    const employerId = req.employer.id;
 
-    // Find jobs posted by the employer using employerId
+    // Get all job IDs posted by the employer
     const jobs = await Job.find({ employerId });
-
-    // Extract job IDs
     const jobIds = jobs.map(job => job._id);
 
-    // Find applications for those jobs
-    const applications = await JobApplication.find({ jobId: { $in: jobIds } })
-      .populate('jobSeekerId', 'name email') // Populate job seeker details
-      .populate({ path: 'jobId', select: 'title employerId' }); // Populate job title and employerId
+    // Fetch applications for all jobs of this employer without population
+    const applications = await JobApplication.find({ jobId: { $in: jobIds } });
 
-    // Map through applications to sanitize data and get employer details
-    const sanitizedApplications = await Promise.all(applications.map(async app => {
-      const jobDetails = await Job.findById(app.jobId).populate('employerId', 'companyName');
-      return {
-        id: app._id,
-        jobTitle: jobDetails.title,
-        jobSeeker: app.jobSeekerId ? { name: app.jobSeekerId.name, email: app.jobSeekerId.email } : null, // Null check
-        employer: jobDetails.employerId ? { companyName: jobDetails.employerId.companyName } : null, // Null check for employer
-        // Include other fields you might want to add
-      };
-    }));
+    if (!applications.length) return res.status(404).json({ msg: 'No applications found for your jobs.' });
 
-    if (!sanitizedApplications.length) return res.status(404).json({ msg: 'No applications found for your jobs.' });
-
-    res.status(200).json(sanitizedApplications);
+    res.status(200).json(applications);
   } catch (err) {
     console.error('Error fetching applications for employer:', err);
     res.status(500).json({ msg: 'Server error' });
   }
 });
+
+
 
 // Export the router
 module.exports = router;

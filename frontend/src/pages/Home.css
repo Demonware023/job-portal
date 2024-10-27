@@ -89,6 +89,31 @@ button {
   margin: 10px 0; /* Margin for spacing */
 }
 
+.job-search-section, .employer-section {
+  margin: 0 auto;
+  max-width: 600px;
+  text-align: center;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.search-container input {
+  padding: 10px;
+  margin: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 200px;
+}
+
+.search-button, .get-started-button {
+  background-color: #5BC0EB;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 .footer {
   background-color: #333333; /* Dark footer background */
   color: white; /* Text color */

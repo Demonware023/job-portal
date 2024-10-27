@@ -16,6 +16,15 @@
   align-items: center;
 }
 
+.logo {
+  background-image: url('../images/portal.jpg'); /* Adjust the path as necessary */
+  background-size: contain; /* Ensure the logo fits within the container */
+  background-repeat: no-repeat; /* Prevent the image from repeating */
+  width: 100px; /* Set width for the logo */
+  height: 100px; /* Set height for the logo */
+  margin-bottom: 20px; /* Space below the logo */
+}
+
 .sidebar h2 {
   color: #ffffff;
   margin-bottom: 40px;
@@ -157,9 +166,13 @@
 }
 
 .profile-pic {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  background-image: url('../images/portal.jpg'); /* Adjust the path as necessary */
+  background-size: cover; /* Ensure the image covers the container */
+  background-repeat: no-repeat; /* Prevent the image from repeating */
+  width: 50px; /* Set width for the profile picture */
+  height: 50px; /* Set height for the profile picture */
+  border-radius: 50%; /* Make the profile picture circular */
+  margin-right: 10px; /* Space to the right of the profile picture */
   cursor: pointer;
 }
 

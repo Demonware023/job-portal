@@ -26,6 +26,7 @@ import JobSeekerSettings from './pages/JobSeekerSettings';
 import RecommendedJobs from './pages/RecommendedJobs';
 import JobApplication from './pages/JobApplication';
 import NotFound from './pages/NotFound';
+import JobDetailsPage from './pages/JobDetailsPage';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -82,6 +83,7 @@ function App() {
             <Route path="/jobseeker/jobs" element={<ProtectedRoute><JobSeekerJobsPage /></ProtectedRoute>} />
             <Route path="/employer/jobs" element={<ProtectedRoute><EmployersJobsPage /></ProtectedRoute>} />
             <Route path="/jobseeker/application" element={<ProtectedRoute><JobSeekerApplication /></ProtectedRoute>} />
+            <Route path="/job-details-page" element={<JobDetailsPage />} />
             
             {/* General route for Employer Applications */}
             <Route path="/employer/applications" element={<ProtectedRoute><EmployerApplications /></ProtectedRoute>} />

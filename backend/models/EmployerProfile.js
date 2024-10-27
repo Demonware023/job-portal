@@ -28,6 +28,10 @@ const employerProfileSchema = new Schema({
     type: String,
     required: false, // Optional field
   },
+  profileImage: { // New field to store the profile image filename or path
+    type: String,
+    required: false, // Optional field; you may change this to true if you want to enforce it
+  },
 });
 
 module.exports = mongoose.model('EmployerProfile', employerProfileSchema);

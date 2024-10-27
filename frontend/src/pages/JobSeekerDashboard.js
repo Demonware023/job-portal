@@ -100,6 +100,7 @@ const JobSeekerDashboard = () => {
             <li><Link to="/jobseeker/settings">Settings</Link></li>
             <li><Link to="/jobseeker/application">My Applications</Link></li>
             <li><Link to="/jobseeker/recommended-jobs">Recommended Jobs</Link></li>
+            <li><Link to="/job-details-page">JobDetailsPage</Link></li>
           </ul>
         </nav>
         {/* Job Time Portal Icon */}

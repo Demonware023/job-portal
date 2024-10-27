@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios'; // Import Axios
-import './EmployerProfile.css'; // Make sure to import your CSS
+import axios from 'axios';
+import './EmployerProfile.css';
 
 const EmployerProfile = () => {
   const [companyName, setCompanyName] = useState('');
@@ -9,47 +9,58 @@ const EmployerProfile = () => {
   const [websiteUrl, setWebsiteUrl] = useState('');
   const [industry, setIndustry] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(''); // State for error messages
+  const [errorMessage, setErrorMessage] = useState('');
 
-  // Load profile data from local storage when the component mounts
+  // Fetch profile data from API on component mount
   useEffect(() => {
-    const savedProfile = JSON.parse(localStorage.getItem('employerProfile'));
-    if (savedProfile) {
-      setCompanyName(savedProfile.companyName);
-      setDescription(savedProfile.description);
-      setLocation(savedProfile.location);
-      setWebsiteUrl(savedProfile.websiteUrl);
-      setIndustry(savedProfile.industry);
-    }
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        console.log('Using token:', token);
+        const response = await axios.get('/api/employer/profile', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const { companyName, description, location, websiteUrl, industry } = response.data;
+
+        // Set state for all profile fields
+        setCompanyName(companyName || '');
+        setDescription(description || '');
+        setLocation(location || '');
+        setWebsiteUrl(websiteUrl || '');
+        setIndustry(industry || '');
+
+        // Save profile to local storage
+        localStorage.setItem('employerProfile', JSON.stringify(response.data));
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+        setErrorMessage('Failed to fetch profile. Please try again.');
+      }
+    };
+
+    fetchProfile();
   }, []);
 
-  // Handle form submission
+  // Handle form submission to save profile
   const handleSubmit = async (e) => {
     e.preventDefault();
     const profileData = { companyName, description, location, websiteUrl, industry };
 
-    console.log('Profile data to be submitted:', profileData); // Log the profile data before submission
-
     try {
-      const token = localStorage.getItem('token'); // Retrieve token
-
-      // Make API call to save the profile data
+      const token = localStorage.getItem('token');
       const response = await axios.patch('/api/employer/profile', profileData, {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // Include the JWT token
+          Authorization: `Bearer ${token}`,
         },
       });
 
-      console.log('Response from API:', response.data); // Log response
-
-      // Save profile data to local storage
+      // Ensure all fields are saved in local storage and state
       localStorage.setItem('employerProfile', JSON.stringify(response.data));
-
-      // Update local state with the response data
       const { companyName, description, location, websiteUrl, industry } = response.data;
-      console.log('Updated profile data:', { companyName, description, location, websiteUrl, industry });
 
+      // Set state for all profile fields with updated data
       setCompanyName(companyName);
       setDescription(description);
       setLocation(location);
@@ -58,17 +69,17 @@ const EmployerProfile = () => {
 
       // Close modal after saving
       setIsModalOpen(false);
-      setErrorMessage(''); // Clear error message
+      setErrorMessage('');
     } catch (error) {
       console.error('Error saving profile:', error);
-      setErrorMessage('Failed to save profile. Please try again.'); // Set error message
+      setErrorMessage('Failed to save profile. Please try again.');
     }
   };
 
   return (
     <div className="container">
       <h3>Employer Profile</h3>
-      {errorMessage && <div className="error-message">{errorMessage}</div>} {/* Error message display */}
+      {errorMessage && <div className="error-message">{errorMessage}</div>}
       <div className="profile-details">
         <p><strong>Company Name:</strong> {companyName}</p>
         <p><strong>Description:</strong> {description}</p>
