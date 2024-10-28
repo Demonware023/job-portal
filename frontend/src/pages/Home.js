@@ -80,7 +80,7 @@ const Home = () => {
         <Typography variant="body1" sx={{ mt: 2 }} />
         <Box sx={{ mt: 4 }}>
           <Link to="/post-job">
-            <Button variant="contained" size="large" color="primary" startIcon={<FaBriefcase />} sx={{ mr: 2 }}>
+            <Button variant="contained" size="large" color="white" startIcon={<FaBriefcase />} sx={{ mr: 2 }}>
               Post a Job
             </Button>
           </Link>
@@ -103,7 +103,7 @@ const Home = () => {
               <Box key={job.id} className="job-item" sx={{ borderBottom: '1px solid #ccc', mb: 3, pb: 2 }}>
                 <Typography variant="h6">{job.title}</Typography>
                 <Typography variant="body2">{job.location}</Typography>
-                <Button variant="contained" color="primary" sx={{ mt: 1 }} startIcon={<FaUserTie />}>
+                <Button variant="contained" color="white" sx={{ mt: 1 }} startIcon={<FaUserTie />}>
                   Apply Now
                 </Button>
               </Box>

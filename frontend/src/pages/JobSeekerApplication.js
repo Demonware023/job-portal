@@ -29,7 +29,7 @@ const JobSeekerApplication = () => {
       <Link to="/job-application" className="apply-link">Apply for a New Job</Link>
       {applications.length > 0 ? (
         applications.map(app => (
-          <div key={app._id} className="application-card">
+          <div key={app._id} className="jobseeker-application-card">
             <h3>{app.job?.title || 'Job title not available'}</h3>
             <p>Status: {app.status}</p>
             <p>Cover Letter: {app.coverLetter}</p>

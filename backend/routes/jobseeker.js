@@ -94,6 +94,23 @@ router.get('/jobs', async (req, res) => {
   }
 });
 
+// New Route: Fetch job details by job ID
+router.get('/jobs/:jobId', authenticateUser, async (req, res) => {
+  const { jobId } = req.params;
+
+  try {
+    const job = await Job.findById(jobId);
+    if (!job) {
+      return res.status(404).json({ msg: 'Job not found' });
+    }
+
+    res.status(200).json({ job });
+  } catch (err) {
+    console.error('Error fetching job details:', err);
+    res.status(500).json({ msg: 'Server error' });
+  }
+});
+
 // Update job seeker profile
 router.post('/profile', authenticateUser, async (req, res) => {
   const { bio, skills, experience, resumeUrl } = req.body;

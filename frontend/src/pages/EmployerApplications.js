@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, useParams } from 'react-router-dom';
-import './EmployerApplications.css';
+import './EmployerApplications.css'; // Ensure this file is created for styling
 import JobDetailsModal from '../components/JobDetailsModal'; // Import the custom modal
+import HomeIcon from '../components/HomeIcon';
 
 const EmployerApplications = () => {
-  const { jobId } = useParams();
-  const [applications, setApplications] = useState([]);
+/*   const { jobId } = useParams(); */
   const [jobs, setJobs] = useState([]);
-  const [selectedJob, setSelectedJob] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null); // Added error state
+  const [selectedJob, setSelectedJob] = useState(null);
   const [isJobDetailsModalOpen, setIsJobDetailsModalOpen] = useState(false); // State for Job Details Modal
-  const [isApplicationsModalOpen, setIsApplicationsModalOpen] = useState(false); // State for Applications Modal
+  const [dropdownOpen, setDropdownOpen] = useState(false); // Dropdown state for profile
 
   // Fetch jobs on component mount
   useEffect(() => {
@@ -21,157 +22,98 @@ const EmployerApplications = () => {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });
         setJobs(response.data);
-        setLoading(false);
       } catch (error) {
         console.error('Error fetching jobs:', error);
-        setLoading(false);
+        setError('Failed to load jobs. Please try again later.'); // Set error message
+      } finally {
+        setLoading(false); // Set loading to false in finally
       }
     };
 
     fetchJobs();
   }, []);
 
-  // Fetch applications based on selected job or jobId from params
-  useEffect(() => {
-    if (selectedJob) {
-      setApplications(selectedJob.applications || []); // Use the applications from the selected job directly
-    } else if (jobId) {
-      fetchApplications(jobId);
-    }
-  }, [selectedJob, jobId]);
-
-  // Function to fetch applications by job ID
-  const fetchApplications = async (jobId) => {
-    try {
-      const response = await axios.get(`/api/employer/jobs/${jobId}/applications`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
-      setApplications(response.data);
-    } catch (error) {
-      console.error('Error fetching applications:', error);
-    }
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    window.location.href = '/login'; // Redirect to the login page after logging out
   };
-
-  // Handle job selection and toggle if the same job is clicked again
-  const handleJobClick = (job) => {
-    if (selectedJob && selectedJob._id === job._id) {
-      setSelectedJob(null); // Unselect the job if it's already selected
-      setIsJobDetailsModalOpen(false); // Close the job details modal
-      setIsApplicationsModalOpen(false); // Close the applications modal
-    } else {
-      setSelectedJob(job); // Select the new job
-      setIsJobDetailsModalOpen(false); // Ensure job details modal is closed
-      setIsApplicationsModalOpen(true); // Open the applications modal
-      fetchApplications(job._id); // Fetch applications for the clicked job
-    }
-  };
-
-  // New function to handle View Applications button click
-  const handleApplicationsClick = (job) => {
-    if (isApplicationsModalOpen && selectedJob && selectedJob._id === job._id) {
-      setSelectedJob(null); // Unselect the job if it's already selected
-      setIsApplicationsModalOpen(false); // Close the applications modal
-    } else {
-      setSelectedJob(job); // Select the job
-      setIsApplicationsModalOpen(true); // Open the applications modal
-      fetchApplications(job._id); // Fetch applications for the job
-    }
-  };
-
-  // Handle application status updates
-  const handleApplicationAction = async (appId, status, jobId) => {
-    try {
-      const response = await axios.patch(`/api/employer/jobs/${jobId}/applications/${appId}`, { status });
-      alert(response.data.msg);
-      setApplications((prev) =>
-        prev.map((app) => (app._id === appId ? { ...app, status } : app))
-      );
-    } catch (error) {
-      alert('Failed to update application status.');
-    }
-  };
-
 
   return (
     <div className="dashboard-container">
       <div className="sidebar">
         <h2>Dashboard</h2>
+        <div className="logo" />
         <nav>
           <ul>
+            <li><HomeIcon /></li>
             <li><Link to="/employer/jobs">My Jobs</Link></li>
             <li><Link to="/employer/applications">Applications</Link></li>
             <li><Link to="/post-job">Post A Job</Link></li>
             <li><Link to="/employer/profile">Profile</Link></li>
           </ul>
         </nav>
+        <button onClick={handleLogout}>Logout</button>
       </div>
       <div className="main-content">
-        <div className="applications-container">
-          <h2>Your Jobs</h2>
+        <div className="header">
+          <h2>Job Applications</h2>
+          <div className="profile-section">
+            <div className="profile-pic" />
+            <div className="dropdown">
+              <button onClick={() => setDropdownOpen(!dropdownOpen)} className="dropdown-button">▼</button>
+              {dropdownOpen && (
+                <div className="dropdown-menu">
+                  <button className="dropdown-item" onClick={handleLogout}>Logout</button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="job-cards-container">
           {loading ? (
-            <p>Loading jobs...</p>
+            <p>Loading jobs...</p> // Consider using a spinner here
+          ) : error ? (
+            <p className="error-message">{error}</p> // Display error message
           ) : jobs.length > 0 ? (
             jobs.map(job => (
-              job && (
-                <div key={job._id} className="job-card">
-                  <h2 onClick={() => handleJobClick(job)}>{job.title}</h2>
-                  <p>{job.description}</p>
-                  <p>Location: {job.location}</p>
+              <div key={job._id} className="job-card">
+                <h2>{job.title}</h2>
+                <p>{job.description}</p>
+                <p>Location: {job.location}</p>
+                
+                <div className="job-actions"> {/* Added action items container */}
+                  <Link to={`/employer/jobs/${job._id}/applications`} className="delete-job-button">
+                    View Applications
+                  </Link>
 
                   <button 
-                    onClick={() => handleApplicationsClick(job)} 
-                    className="view-applications-button"
+                    onClick={() => {
+                      setSelectedJob(job);
+                      setIsJobDetailsModalOpen(true);
+                    }}
+                    className="update-job-button"
                   >
-                    View Applications
-                  </button>
-
-                  <button onClick={() => {
-                    setSelectedJob(job);
-                    setIsJobDetailsModalOpen(true);
-                    setIsApplicationsModalOpen(false);
-                  }}>
                     View Details
                   </button>
                 </div>
-              )
+              </div>
             ))
           ) : (
             <p>No jobs found.</p>
           )}
-
-          {isApplicationsModalOpen && selectedJob && (
-            <>
-              <h2>Applications for {selectedJob.title}</h2>
-              {applications.length > 0 ? (
-                applications.map((app) => (
-                  <div key={app._id} className="application-card">
-                    <p>
-                      Applicant: {app.jobSeekerId ? `${app.jobSeekerId.name} (${app.jobSeekerId.email})` : 'Unknown Applicant'}
-                    </p>
-                    <p>Status: {app.status}</p>
-                    <p>Cover Letter: {app.coverLetter}</p>
-                    <p>Expected Pay: {app.expectedPay}</p>
-                    <button onClick={() => handleApplicationAction(app._id, 'accepted', selectedJob._id)}>Accept</button>
-                    <button onClick={() => handleApplicationAction(app._id, 'rejected', selectedJob._id)}>Reject</button>
-                  </div>
-                ))
-              ) : (
-                <p>No applications found for this job.</p>
-              )}
-            </>
-          )}
-
-          {/* Job Details Modal */}
-          {isJobDetailsModalOpen && selectedJob && (
-            <JobDetailsModal
-              job={selectedJob}
-              onClose={() => {
-                setIsJobDetailsModalOpen(false);
-                setSelectedJob(null);
-              }}
-            />
-          )}
         </div>
+
+        {/* Job Details Modal */}
+        {isJobDetailsModalOpen && selectedJob && (
+          <JobDetailsModal
+            job={selectedJob}
+            onClose={() => {
+              setIsJobDetailsModalOpen(false);
+              setSelectedJob(null);
+            }}
+          />
+        )}
       </div>
     </div>
   );

@@ -17,9 +17,10 @@ const JobDetailsPage = () => {
         const response = await axios.get(`/api/jobseeker/jobs/${jobId}`, {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });
-        setJob(response.data.job);
+        setJob(response.data);
         setLoading(false);
       } catch (err) {
+        console.error('Error fetching job details:', err); // Log the error for debugging
         setError('Error fetching job details.');
         setLoading(false);
       }

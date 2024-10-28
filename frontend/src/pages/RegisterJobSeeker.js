@@ -1,22 +1,19 @@
 import React, { useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
+import './login.css';
 
 const RegisterJobSeeker = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  // const navigate = useNavigate();
 
   const handleRegistration = async (e) => {
     e.preventDefault();
     try {
       const response = await fetch('/api/auth/register-jobseeker', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, email, password, role: 'jobseeker' }), // Ensure role is set
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password, role: 'jobseeker' }),
       });
 
       const data = await response.json();
@@ -28,44 +25,24 @@ const RegisterJobSeeker = () => {
         setError(data.msg || 'Registration failed. Please try again.');
       }
     } catch (err) {
-      console.error('Error:', err);
       setError('Registration failed. Please try again.');
     }
   };
 
   return (
-    <div>
+    <div className="container">
       <h2>Register as Job Seeker</h2>
       <form onSubmit={handleRegistration}>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Name"
-          required
-        />
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-          required
-        />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          required
-        />
-        {/* Role is automatically set to 'jobseeker' */}
+        <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" required />
+        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required />
+        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required />
         <div>
           <label>Role:</label>
           <input type="text" value="Jobseeker" readOnly />
         </div>
         <button type="submit">Register</button>
       </form>
-      {error && <p>{error}</p>}
+      {error && <p className="error">{error}</p>}
     </div>
   );
 };

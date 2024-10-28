@@ -1,0 +1,123 @@
+/* General reset */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Container */
+.employer-applicants-container {
+  padding: 20px;
+  background-color: #f4f4f8;
+}
+
+/* Back Button */
+.back-button {
+  display: inline-block;
+  background-color: #007bff; /* Blue color */
+  color: white;
+  padding: 10px 15px;
+  text-decoration: none;
+  border-radius: 5px;
+  margin-bottom: 20px; /* Add some space below the button */
+}
+
+.back-button:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+}
+
+/* Headings */
+h2 {
+  color: white;
+  margin-bottom: 20px;
+}
+
+/* Applications Stack */
+.applications-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Space between cards */
+}
+
+.application-card {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 20px; /* For cylindrical effect */
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s; /* Added transform for a subtle effect */
+}
+
+.application-card:hover {
+  background-color: #f5f5f5; /* Change background on hover */
+  transform: scale(1.02); /* Slightly enlarge on hover */
+}
+
+/* Avatar Area */
+.avatar-area {
+  flex-shrink: 0;
+  margin-right: 15px;
+}
+
+.avatar-area img {
+  width: 60px; /* Set desired size for avatar */
+  height: 60px; /* Set desired size for avatar */
+  border-radius: 50%; /* Make it circular */
+}
+
+/* Details Area */
+.details-area {
+  flex-grow: 1;
+}
+
+.details-area h3, .details-area p {
+  margin: 0;
+}
+
+/* Error Message */
+.error-message {
+  color: #d9534f;
+  font-weight: bold;
+}
+
+/* Placeholder Text */
+.applications-stack p {
+  color: #6c757d;
+}
+
+/* Modal Styles */
+.slide-up-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it's on top of other elements */
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px; /* Rounded corners for modal */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
+  width: 90%; /* Responsive width */
+  max-width: 500px; /* Maximum width for larger screens */
+}
+
+/* Media Queries for responsiveness */
+@media (max-width: 768px) {
+  .application-card {
+    flex-direction: column; /* Stack avatar and details for smaller screens */
+    align-items: flex-start; /* Align items to the start */
+  }
+
+  .avatar-area {
+    margin-bottom: 10px; /* Space below avatar */
+  }
+}

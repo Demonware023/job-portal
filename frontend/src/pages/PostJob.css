@@ -1,37 +1,210 @@
-.skills-container {
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Roboto', sans-serif; /* Use modern font */
+}
+
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+  background-color: #f0f2f5; /* Light background */
+}
+
+.sidebar {
+  width: 150px; /* Increased width for better navigation */
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+/*   display: flex;
+  flex-direction: column;
+  justify-content: space-between; */ /* Space out elements */
+}
+
+.logo {
+  background-image: url('../images/portal.jpg'); /* Adjust the path as necessary */
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 100px;
+  height: 100px;
+  margin-bottom: 20px;
+}
+
+.sidebar h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.sidebar nav ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar nav ul li {
+  margin: 10px 0;
+}
+
+.sidebar nav ul li a {
+  display: block;
+  padding: 10px 15px;
+  color: #ffffff;
+  background-color: #007bff; /* Button-like links */
+  text-align: center;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+}
+
+.sidebar nav ul li a:hover {
+  background-color: #0056b3;
+}
+
+.sidebar button {
+  background-color: #FF595E; /* Accent color */
+  color: white;
+  border: none;
+  border-radius: 8px; /* Rounded corners */
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.sidebar button:hover {
+  background-color: #d84c51; /* Darker accent color on hover */
+}
+
+/* Main content */
+.main-content {
+  flex-grow: 1;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  background-color: #ECECEC; /* Light gray background */
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #007bff; /* Blue header */
+  color: white;
+  border-radius: 10px;
+}
+
+.header .profile-section {
+  display: flex;
+  align-items: center;
+}
+
+.header .profile-section .profile-pic {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.header .dropdown {
+  position: relative;
+}
+
+.header .dropdown .dropdown-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.header .dropdown .dropdown-menu {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background-color: white;
+  color: black;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+}
+
+.header h2 {
+  margin: 0;
+}
+
+/* Skills Box */
+.skills-box {
   display: flex;
   flex-wrap: wrap;
   margin: 10px 0;
+  padding: 10px;
+  background-color: #f9f9f9; /* Light background for the skills box */
+  border: 1px solid #ddd; /* Light border for separation */
+  border-radius: 20px; /* Rounded corners */
+  max-width: 200px; /* Limit width for a compact design */
+  overflow: auto; /* Allow scrolling if too many skills are added */
 }
 
 .skill-pill {
   display: flex;
   align-items: center;
-  background-color: #e0e0e0;
+  background-color: #007bff;
+  color: white; /* Text color for skills */
   border-radius: 20px;
   padding: 5px 10px;
-  margin-right: 10px;
-}
-
-.predefined-skills-container {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 10px 0;
-}
-
-.predefined-skill-button {
-  background-color: #f0f0f0;
-  border: none;
-  border-radius: 20px;
-  padding: 5px 10px;
-  margin: 5px;
-  cursor: pointer;
+  margin: 5px; /* Adjust margin for better spacing */
   transition: background-color 0.3s;
 }
 
+.skill-pill:hover {
+  background-color: #d5d5d5; /* Slight darkening on hover */
+}
+
+/* Styles for the predefined skills container */
+.predefined-skills-container {
+  margin-top: 10px; /* Space above the skills container */
+  display: flex; /* Display flex for wrapping */
+  flex-wrap: wrap; /* Allow buttons to wrap to the next line */
+  color: #333;
+}
+
+.predefined-skills-box {
+  max-height: 150px; /* Set the maximum height for the scrollable box */
+  overflow-y: auto; /* Enable vertical scrolling */
+  border: 1px solid #ccc; /* Border around the box */
+  border-radius: 4px; /* Rounded corners */
+  padding: 10px; /* Padding inside the box */
+  display: flex; /* Make the buttons display flexibly */
+  flex-wrap: wrap; /* Allow buttons to wrap to the next line */
+  scrollbar-width: thin; /* For Firefox */
+  background-color: #f8f8f8;
+}
+
+/* Custom scrollbar styling for WebKit browsers (Chrome, Safari) */
+.predefined-skills-box::-webkit-scrollbar {
+  width: 8px; /* Set the width of the scrollbar */
+}
+
+.predefined-skills-box::-webkit-scrollbar-thumb {
+  background-color: #007bff; /* Color of the scrollbar thumb */
+  border-radius: 10px; /* Rounded corners for the thumb */
+}
+
+.predefined-skill-button {
+  background-color: #f0f0f0; /* Background color for buttons */
+  border: none; /* Remove border */
+  border-radius: 20px; /* Rounded button shape */
+  padding: 5px 10px; /* Smaller padding for compactness */
+  margin: 3px; /* Spacing between buttons */
+  cursor: pointer; /* Change cursor on hover */
+  transition: background-color 0.3s; /* Smooth background color transition */
+  font-weight: 500; /* Slightly bolder text */
+  flex: 0 1 auto; /* Allow flexible width */
+  max-width: 100px; /* Set maximum width for each button */
+}
+
 .predefined-skill-button.selected {
-  background-color: #007bff;
-  color: white;
+  background-color: #007bff; /* Selected button background color */
+  color: white; /* Selected button text color */
 }
 
 .remove-skill-button {
@@ -41,4 +214,45 @@
   cursor: pointer;
   color: red;
   font-weight: bold;
+}
+
+/* Profile dropdown */
+.profile-dropdown {
+  position: relative;
+}
+
+.profile-pic {
+  background-image: url('../images/portal.jpg'); /* Adjust the path as necessary */
+  background-size: cover; /* Ensure the image covers the container */
+  background-repeat: no-repeat; /* Prevent the image from repeating */
+  width: 50px; /* Set width for the profile picture */
+  height: 50px; /* Set height for the profile picture */
+  border-radius: 50%; /* Make the profile picture circular */
+  margin-right: 10px; /* Space to the right of the profile picture */
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: white;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-dropdown:hover .dropdown-content {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 150px; /* Narrower sidebar for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    width: 100px; /* Even narrower sidebar for very small screens */
+  }
 }

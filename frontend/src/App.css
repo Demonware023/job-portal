@@ -1,18 +1,24 @@
 /* src/App.css */
-.App {
+body, .App {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  box-sizing: border-box;
   text-align: center;
   font-family: Arial, sans-serif;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 .App-header {
   background-color: #282c34; /* Retain the original dark background */
-  min-height: 100vh;
+  min-height: calc(100vh - 20px);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center; /* Center content vertically */
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: #fff;
   position: relative; /* To keep the banner within the header */
 }
 
@@ -24,43 +30,49 @@
   padding: 20px; /* Padding around the banner */
   position: absolute; /* Position the banner absolutely */
   top: 20px; /* Move it down slightly from the top */
+  color: #fff;
 }
 
-.logo {
+.home-logo {
   font-size: 1.5em; /* Logo text size */
   font-weight: bold; /* Logo boldness */
   color: white; /* Logo text color */
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: flex;
+  color: #fff;
 }
 
 .login-container {
   display: flex; /* Flex container for login text and button */
   align-items: center; /* Center items vertically */
+  color: #fff;
 }
 
 .login-text {
   font-size: 1.1em; /* Login text size */
-  color: white; /* Login text color */
+  color: #fff; /* Login text color */
   text-decoration: none; /* Remove underline */
   transition: color 0.3s; /* Smooth color transition */
   margin-right: 20px; /* Space between login text and button */
 }
 
 .login-text:hover {
-  color: #5BC0EB; /* Change color on hover */
+  color: #000; /* Change color on hover */
 }
 
 .primary-btn {
-  background-color: #5BC0EB; /* Button color */
+  background-color: #fff; /* Button color */
   border: none; /* Remove border */
   border-radius: 30px; /* More oval shape */
-  color: white; /* Button text color */
+  color: #000; /* Button text color */
   padding: 15px 30px; /* Increased padding for a bigger button */
   font-size: 1.2rem; /* Larger font size for button text */
   transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
 }
 
 .primary-btn:hover {
-  background-color: #007BFF; /* Change color on hover */
+  background-color: #000; /* Change color on hover */
   transform: translateY(-2px); /* Slight lift effect on hover */
 }
 

@@ -80,6 +80,51 @@ router.get('/profile', authenticateToken, authenticateEmployer, async (req, res)
   }
 });
 
+// Route to create or update the employer profile
+router.post('/profile', authenticateToken, authenticateEmployer, async (req, res) => {
+  try {
+    const employerId = req.employer.id; // Extract employer ID from the request
+
+    // Check if all required fields are provided
+    const { companyName, description, location, websiteUrl, industry } = req.body;
+    if (!companyName || !description || !location) {
+      return res.status(400).json({ error: 'Company name, description, and location are required.' });
+    }
+
+    // Check if an employer profile already exists
+    let employerProfile = await EmployerProfile.findOne({ employerId });
+
+    // If it exists, update it; otherwise, create a new one
+    if (employerProfile) {
+      employerProfile.companyName = companyName;
+      employerProfile.description = description;
+      employerProfile.location = location;
+      employerProfile.websiteUrl = websiteUrl;
+      employerProfile.industry = industry;
+      
+      // Save the updated profile
+      await employerProfile.save();
+    } else {
+      // Create a new profile if one doesn't exist
+      employerProfile = new EmployerProfile({
+        employerId,
+        companyName,
+        description,
+        location,
+        websiteUrl,
+        industry,
+      });
+      await employerProfile.save();
+    }
+
+    // Send back the employer profile data
+    res.status(201).json(employerProfile);
+  } catch (error) {
+    console.error('Error creating/updating employer profile:', error);
+    res.status(500).json({ error: 'Server error while saving profile.' });
+  }
+});
+
 
 // PATCH /api/employer/profile - Update employer profile
 router.patch(
@@ -292,6 +337,26 @@ router.get('/applications', authenticateToken, authenticateEmployer, async (req,
   }
 });
 
+// GET /api/employers/jobs/:jobId/applicants - Fetch applicants for a specific job (authenticated)
+router.get('/jobs/:jobId/applicants', authenticateToken, authenticateEmployer, async (req, res) => {
+  try {
+    const jobId = req.params.jobId;
+
+    // Verify job ownership
+    const job = await Job.findOne({ _id: jobId, employerId: req.employer.id });
+    if (!job) return res.status(404).json({ msg: 'Job not found or unauthorized access.' });
+
+    // Fetch all applications for this job
+    const applications = await JobApplication.find({ jobId });
+
+    if (!applications.length) return res.status(404).json({ msg: 'No applications found for this job.' });
+
+    res.status(200).json(applications);
+  } catch (err) {
+    console.error('Error fetching applicants for job:', err);
+    res.status(500).json({ msg: 'Server error' });
+  }
+});
 
 
 // Export the router

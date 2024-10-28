@@ -5,19 +5,29 @@ body, html {
   font-family: 'Roboto', sans-serif; /* Use modern font */
 }
 
-.employer-jobs-page {
+.dashboard-container {
   display: flex;
-  height: 100vh; /* Full height of the viewport */
+  height: 100vh;
+  background-color: #f0f2f5; /* Light background */
 }
 
 .sidebar {
-  width: 250px; /* Increased width for better navigation */
+  width: 150px !important; /* Increased width for better navigation */
   background-color: #333;
   color: #fff;
   padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between; /* Space out elements */
+}
+
+.logo {
+  background-image: url('../images/portal.jpg'); /* Adjust the path as necessary */
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 100px;
+  height: 100px;
+  margin-bottom: 20px;
 }
 
 .sidebar h2 {
@@ -31,6 +41,21 @@ body, html {
 
 .sidebar nav ul li {
   margin: 10px 0;
+}
+
+.sidebar nav ul li a {
+  display: block;
+  padding: 10px 15px;
+  color: #ffffff;
+  background-color: #007bff; /* Button-like links */
+  text-align: center;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+}
+
+.sidebar nav ul li a:hover {
+  background-color: #0056b3;
 }
 
 .sidebar button {
@@ -47,20 +72,87 @@ body, html {
   background-color: #d84c51; /* Darker accent color on hover */
 }
 
+/* Main content */
 .main-content {
   flex-grow: 1;
-  padding: 20px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
   background-color: #ECECEC; /* Light gray background */
-  overflow: hidden; /* Prevent overflow */
 }
 
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #007bff; /* Blue header */
+  color: white;
+  border-radius: 10px;
+}
+
+.header .profile-section {
+  display: flex;
+  align-items: center;
+}
+
+.header .profile-section .profile-pic {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.header .dropdown {
+  position: relative;
+}
+
+.header .dropdown .dropdown-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.header .dropdown .dropdown-menu {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background-color: white;
+  color: black;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+}
+
+.header h2 {
+  margin: 0;
+}
+
+/* Job cards container */
+.job-cards-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+/* Job card */
 .job-card {
   background-color: white;
-  border-radius: 8px; /* Rounded corners */
+  border-radius: 10px;
   padding: 20px;
-  margin: 10px 0;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  flex: 1 1 calc(33.33% - 20px);
+  max-width: calc(33.33% - 20px);
 }
+
+.job-card h2 {
+  margin-top: 0;
+}
+
 
 .job-card h3 {
   margin-top: 0;
@@ -68,6 +160,21 @@ body, html {
 
 .job-actions {
   margin-top: 15px;
+}
+
+.view-applications-button {
+  margin-top: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.view-applications-button:hover {
+  background-color: #0056b3;
 }
 
 button {
@@ -157,4 +264,33 @@ button:hover {
 
 .cancel-button:hover {
   background-color: #5a6268; /* Darker gray on hover */
+}
+
+/* Profile dropdown */
+.profile-dropdown {
+  position: relative;
+}
+
+.profile-pic {
+  background-image: url('../images/portal.jpg'); /* Adjust the path as necessary */
+  background-size: cover; /* Ensure the image covers the container */
+  background-repeat: no-repeat; /* Prevent the image from repeating */
+  width: 50px; /* Set width for the profile picture */
+  height: 50px; /* Set height for the profile picture */
+  border-radius: 50%; /* Make the profile picture circular */
+  margin-right: 10px; /* Space to the right of the profile picture */
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: white;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-dropdown:hover .dropdown-content {
+  display: block;
 }

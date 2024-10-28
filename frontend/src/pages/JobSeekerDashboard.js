@@ -89,6 +89,9 @@ const JobSeekerDashboard = () => {
     setSelectedJob(null); // Close the modal
   };
 
+  // Create a Set to track unique job IDs
+  const uniqueJobIds = new Set();
+
   return (
     <div className="dashboard">
       <aside className="sidebar">
@@ -100,7 +103,7 @@ const JobSeekerDashboard = () => {
             <li><Link to="/jobseeker/settings">Settings</Link></li>
             <li><Link to="/jobseeker/application">My Applications</Link></li>
             <li><Link to="/jobseeker/recommended-jobs">Recommended Jobs</Link></li>
-            <li><Link to="/job-details-page">JobDetailsPage</Link></li>
+            <li><Link to="/jobseeker/jobs/:jobId">JobDetailsPage</Link></li>
           </ul>
         </nav>
         {/* Job Time Portal Icon */}
@@ -181,7 +184,7 @@ const JobSeekerDashboard = () => {
         </div>
       </aside>
 
-      <div className="dashboard-content">
+      <div className="main-content">
         <div className="header">
           <h1>Your Applications</h1>
           <div className="profile-dropdown" onClick={toggleDropdown}>
@@ -194,25 +197,35 @@ const JobSeekerDashboard = () => {
           </div>
         </div>
         
-        {applications.length > 0 ? (
-          applications.map(app => (
-            app.job && ( // Check if app.job exists before accessing properties
-              <div key={app._id} className="application-card">
-                <h3>{app.job.title}</h3>
-                <p>Status: {app.status}</p>
-                <p>Cover Letter: {app.coverLetter}</p>
-                <p>Resume: <a href={app.resume} target="_blank" rel="noopener noreferrer">View Resume</a></p>
-              </div>
-            )
-          ))
-        ) : (
-          <p>No applications found.</p>
-        )}
+        <h2>Your Applications</h2>
+        <div className="job-cards-container">
+          {applications.length > 0 ? (
+            applications.map(app => (
+              app.job && (
+                <div key={app._id} className="jobseeker-application-card">
+                  <h3>{app.job.title}</h3>
+                  <p>Status: {app.status}</p>
+                  <p>Cover Letter: {app.coverLetter}</p>
+                  <a href={app.resume} target="_blank" rel="noopener noreferrer">View Resume</a>
+                </div>
+              )
+            ))
+          ) : (
+            <p>No applications found.</p>
+          )}
+        </div>
         
         <h2>Available Jobs</h2>
-        {jobs.length > 0 ? (
-          jobs.map(job => (
-            job && ( // Check if job exists before accessing properties
+        <div className="job-cards-container">
+          {jobs.length > 0 ? (
+            jobs.filter(job => {
+              // Check if the job ID is already in the Set
+              if (!uniqueJobIds.has(job._id)) {
+                uniqueJobIds.add(job._id); // Add it to the Set if it's unique
+                return true; // Include this job
+              }
+              return false; // Exclude this job (duplicate)
+            }).map(job => (
               <div key={job._id} className="job-card">
                 <h3>{job.title}</h3>
                 <p>{job.description}</p>
@@ -220,11 +233,11 @@ const JobSeekerDashboard = () => {
                 <button onClick={() => handleViewDetails(job)}>View Details</button>
                 <button onClick={() => handleApply(job._id)} className="apply-button">Apply Now</button>
               </div>
-            )
-          ))
-        ) : (
-          <p>No jobs available.</p>
-        )}
+            ))
+          ) : (
+            <p>No jobs available.</p>
+          )}
+        </div>
 
         {/* Load more button */}
         {page < totalPages && (

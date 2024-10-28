@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './PostJob.css'; // Import your CSS for styling
+import HomeIcon from '../components/HomeIcon';
 
 const PostJob = () => {
   const [title, setTitle] = useState('');
@@ -8,6 +10,8 @@ const PostJob = () => {
   const [location, setLocation] = useState('');
   const [pay, setPay] = useState('');
   const [skills, setSkills] = useState([]); // Initialize skills array
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
 
   // Predefined skill suggestions
   const predefinedSkills = [
@@ -63,74 +67,111 @@ const PostJob = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login'); // Redirect to the login page after logging out
+  };
+
   return (
-    <div>
-      <h2>Post a Job</h2>
-      <form onSubmit={handlePostJob}>
-        <label htmlFor="job-title">Job Title</label>
-        <input
-          id="job-title"
-          type="text"
-          placeholder="Job Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-          autoComplete="on"
-        />
-        <textarea
-          placeholder="Job Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Location"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          required
-        />
-        <input
-          type="number"
-          placeholder="Pay"
-          value={pay}
-          onChange={(e) => setPay(e.target.value)}
-          required
-        />
-
-        {/* Skills Section */}
-        <label>Selected Skills</label>
-        <div className="skills-container">
-          {skills.map((skill, index) => (
-            <span key={index} className="skill-pill">
-              {skill}
-              <button
-                type="button"
-                onClick={() => toggleSkill(skill)}
-                className="remove-skill-button"
-              >
-                &times;
-              </button>
-            </span>
-          ))}
+    <div className="dashboard-container">
+      <div className="sidebar">
+        <h2>Dashboard</h2>
+        <div className="logo" />
+        <nav>
+          <ul>
+            <li><HomeIcon /></li>
+            <li><Link to="/employer/jobs">My Jobs</Link></li>
+            <li><Link to="/employer/applications">Applications</Link></li>
+            <li><Link to="/post-job">Post A Job</Link></li>
+            <li><Link to="/employer/profile">Profile</Link></li>
+          </ul>
+        </nav>
+        <button onClick={handleLogout}>Logout</button>
+      </div>
+      <div className="main-content">
+        <div className="header">
+          <h2>Post a Job</h2>
+          <div className="profile-section">
+            <div className="profile-pic" />
+            <div className="dropdown">
+              <button onClick={() => setDropdownOpen(!dropdownOpen)} className="dropdown-button">▼</button>
+              {dropdownOpen && (
+                <div className="dropdown-menu">
+                  <button className="dropdown-item" onClick={handleLogout}>Logout</button>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
-        <label>Or click on a skill to add:</label>
-        <div className="predefined-skills-container">
-          {predefinedSkills.map((skill, index) => (
-            <button
-              key={index}
-              type="button"
-              onClick={() => toggleSkill(skill)}
-              className={`predefined-skill-button ${skills.includes(skill) ? 'selected' : ''}`}
-            >
-              {skill}
-            </button>
-          ))}
-        </div>
+        <form onSubmit={handlePostJob}>
+          <label htmlFor="job-title">Job Title</label>
+          <input
+            id="job-title"
+            type="text"
+            placeholder="Job Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+            autoComplete="on"
+          />
+          <textarea
+            placeholder="Job Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Location"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            required
+          />
+          <input
+            type="number"
+            placeholder="Pay"
+            value={pay}
+            onChange={(e) => setPay(e.target.value)}
+            required
+          />
 
-        <button type="submit">Post Job</button>
-      </form>
+          {/* Skills Section */}
+          <label>Selected Skills</label>
+          <div className="skills-box">
+            {skills.map((skill, index) => (
+              <span key={index} className="skill-pill">
+                {skill}
+                <button
+                  type="button"
+                  onClick={() => toggleSkill(skill)}
+                  className="remove-skill-button"
+                >
+                  &times;
+                </button>
+              </span>
+            ))}
+          </div>
+
+          <label>Or click on a skill to add:</label>
+          <div className="predefined-skills-container">
+            <div className="predefined-skills-box">
+              {predefinedSkills.map((skill, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => toggleSkill(skill)}
+                  className={`predefined-skill-button ${skills.includes(skill) ? 'selected' : ''}`}
+                >
+                  {skill}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <button type="submit">Post Job</button>
+        </form>
+      </div>
     </div>
   );
 };

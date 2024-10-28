@@ -1,11 +1,24 @@
 // src/components/HomeIcon.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './HomeIcon.css';
 
 const HomeIcon = () => {
+  const [dashboardLink, setDashboardLink] = useState('/');
+
+  useEffect(() => {
+    // Get the user role from local storage
+    const role = localStorage.getItem('role');
+    // Determine the correct dashboard link based on user role
+    if (role === 'employer') {
+      setDashboardLink('/employer/dashboard');
+    } else if (role === 'jobSeeker') {
+      setDashboardLink('/jobseeker/dashboard');
+    }
+  }, []);
+
   return (
-    <Link to="/" className="home-icon">
+    <Link to={dashboardLink} className="home-icon">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"

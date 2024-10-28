@@ -1,0 +1,82 @@
+.slide-up-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 1000;
+}
+
+.slide-up-modal {
+  background: white;
+  width: 90%;
+  max-width: 600px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  padding: 20px;
+  animation: slide-up 0.3s ease-in-out;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #000; /* Black background */
+  color: #fff; /* White text */
+}
+
+.profile-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.profile-image {
+  width: 80px; /* Adjust as needed */
+  height: 80px; /* Adjust as needed */
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.applicant-name {
+  font-weight: bold;
+  font-size: 1.5rem; /* Adjust size for prominence */
+  margin: 0;
+}
+
+.cover-letter-section {
+  width: 100%;
+}
+
+.cover-letter-section h3 {
+  font-size: 1.2rem; /* Adjust size for cover letter title */
+  margin-bottom: 10px;
+}
+
+.cover-letter-section p {
+  font-size: 1rem; /* Adjust size for cover letter text */
+  line-height: 1.5; /* Better readability */
+}

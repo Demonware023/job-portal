@@ -27,6 +27,7 @@ import RecommendedJobs from './pages/RecommendedJobs';
 import JobApplication from './pages/JobApplication';
 import NotFound from './pages/NotFound';
 import JobDetailsPage from './pages/JobDetailsPage';
+import EmployerApplicants from './pages/EmployerApplicants';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -51,9 +52,10 @@ function App() {
               <>
                 <header className="App-header">
                   <div className="app-banner">
-                    <div className="logo">
+                    <div className="logo" />
+{/*                     <div className="home-logo">
                       <Link to="/">alx -- Job -- Portals</Link>
-                    </div>
+                    </div> */}
                     <div className="login-container">
                       <Link to="/login" className="login-text">Login</Link>
                       <Link to="/jobseeker/jobs">
@@ -83,7 +85,7 @@ function App() {
             <Route path="/jobseeker/jobs" element={<ProtectedRoute><JobSeekerJobsPage /></ProtectedRoute>} />
             <Route path="/employer/jobs" element={<ProtectedRoute><EmployersJobsPage /></ProtectedRoute>} />
             <Route path="/jobseeker/application" element={<ProtectedRoute><JobSeekerApplication /></ProtectedRoute>} />
-            <Route path="/job-details-page" element={<JobDetailsPage />} />
+            <Route path="/jobseeker/jobs/:jobId" element={<JobDetailsPage />} />
             
             {/* General route for Employer Applications */}
             <Route path="/employer/applications" element={<ProtectedRoute><EmployerApplications /></ProtectedRoute>} />
@@ -94,6 +96,7 @@ function App() {
             <Route path="/jobseeker/settings" element={<ProtectedRoute><JobSeekerSettings /></ProtectedRoute>} />
             <Route path="/jobseeker/recommended-jobs" element={<ProtectedRoute><RecommendedJobs /></ProtectedRoute>} />
             <Route path="/job-application/:jobId" element={<ProtectedRoute><JobApplication /></ProtectedRoute>} />
+            <Route path="/employer/jobs/:jobId/applications" element={<ProtectedRoute><EmployerApplicants /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>

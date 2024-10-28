@@ -2,12 +2,12 @@ body {
   font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
-  background: #f5f5f5; /* Light background for better contrast */
-  color: #333333; /* Dark text for readability */
+  background: #000; /* Light background for better contrast */
+  color: #fff; /* Dark text for readability */
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: #084C61; /* Main heading color */
+  color: #fff; /* Main heading color */
   font-weight: bold; /* Bold headings for emphasis */
 }
 
@@ -15,14 +15,17 @@ a {
   text-decoration: none; /* Remove underline from links */
   color: inherit; /* Use inherited color from parent */
   transition: color 0.3s; /* Smooth color transition */
+  color: #fff; /* White links */
 }
 
 a:hover {
-  color: #FF595E; /* Change link color on hover */
+  color: #000; /* Change link color on hover */
 }
 
 button {
   cursor: pointer; /* Pointer cursor for buttons */
+  background-color: #fff; /* White by default */
+  color: #000; /* Black text */
 }
 
 .App {
@@ -50,10 +53,10 @@ button {
 }
 
 .primary-btn {
-  background-color: #5BC0EB; /* Primary button color */
+  background-color: #fff; /* Primary button color */
   border: none; /* Remove border */
   border-radius: 5px; /* Rounded corners */
-  color: white; /* Text color */
+  color: #000; /* Text color */
   padding: 10px 20px; /* Padding for button */
   font-size: 1rem; /* Font size for button text */
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
@@ -61,7 +64,7 @@ button {
 }
 
 .primary-btn:hover {
-  background-color: #007BFF; /* Change color on hover */
+  background-color: #000; /* Change color on hover */
   transform: translateY(-2px); /* Slight lift effect on hover */
 }
 
@@ -115,8 +118,8 @@ button {
 }
 
 .footer {
-  background-color: #333333; /* Dark footer background */
-  color: white; /* Text color */
+  background-color: #000; /* Dark footer background */
+  color: #fff; /* Text color */
   padding: 20px; /* Padding */
   text-align: center; /* Center text */
   position: relative; /* Positioning context */

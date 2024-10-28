@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './EmployerDashboard.css';
+import HomeIcon from '../components/HomeIcon';
 
 const EmployerDashboard = () => {
   const [jobs, setJobs] = useState([]);
@@ -73,27 +74,29 @@ const EmployerDashboard = () => {
   return (
     <div className="dashboard-container">
       <div className="sidebar">
-        <h2>Dashboard</h2>
+        <h2>Job Portal</h2>
         <div className="logo" />
         <nav>
           <ul>
+            <li><HomeIcon /></li>
             <li><Link to="/employer/jobs">My Jobs</Link></li>
             <li><Link to="/employer/applications">Applications</Link></li>
             <li><Link to="/post-job">Post A Job</Link></li>
             <li><Link to="/employer/profile">Profile</Link></li>
           </ul>
         </nav>
+        <button onClick={handleLogout}>Logout</button>
       </div>
       <div className="main-content">
         <div className="header">
-          <h2>Your Jobs</h2>
+          <h2>Dashboard</h2>
           <div className="profile-section">
             <div className="profile-pic" />
             <div className="dropdown">
               <button onClick={() => setDropdownOpen(!dropdownOpen)} className="dropdown-button">▼</button>
               {dropdownOpen && (
                 <div className="dropdown-menu">
-                  <button onClick={handleLogout}>Logout</button>
+                  <button className="dropdown-item" onClick={handleLogout}>Logout</button>
                 </div>
               )}
             </div>
@@ -117,13 +120,13 @@ const EmployerDashboard = () => {
                         return (
                           <div key={app._id} className="application-card">
                             <p>
-                              Applicant: {app.jobSeekerId ? `${app.jobSeekerId.name} (${app.jobSeekerId.email})` : 'Unknown Applicant'}
+                              Applicant: {app.jobSeekerId.name}
                             </p>
                             <p>Status: {app.status}</p>
                             <p>Cover Letter: {app.coverLetter}</p>
                             <p>Expected Pay: {app.expectedPay}</p>
-                            <button onClick={() => handleApplicationAction(app._id, 'accepted', job._id)}>Accept</button>
-                            <button onClick={() => handleApplicationAction(app._id, 'rejected', job._id)}>Reject</button>
+                            <button className="application-action-button accept-button" onClick={() => handleApplicationAction(app._id, 'accepted', job._id)}>Accept</button>
+                            <button className="application-action-button reject-button" onClick={() => handleApplicationAction(app._id, 'rejected', job._id)}>Reject</button>
                           </div>
                         );
                       })}

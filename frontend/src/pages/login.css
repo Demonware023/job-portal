@@ -1,0 +1,70 @@
+body {
+  background-color: #000; /* Black background */
+  color: #fff; /* White text */
+  font-family: 'Arial', sans-serif; /* Modern font */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full viewport height */
+  margin: 0;
+}
+
+.container {
+  background-color: rgba(255, 255, 255, 0.1); /* Slightly transparent white background */
+  border-radius: 8px; /* Rounded corners */
+  padding: 30px; /* Padding around the content */
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); /* Shadow for depth */
+  width: 300px; /* Fixed width for the form */
+}
+
+h2 {
+  text-align: center; /* Centered heading */
+  margin-bottom: 20px; /* Space below the heading */
+}
+
+form {
+  display: flex;
+  flex-direction: column; /* Stack inputs vertically */
+}
+
+label {
+  margin-bottom: 5px; /* Space below labels */
+}
+
+input[type="email"],
+input[type="password"],
+select {
+  background-color: #fff; /* White background for inputs */
+  border: none; /* Remove default border */
+  border-radius: 4px; /* Rounded corners */
+  padding: 10px; /* Padding inside inputs */
+  margin-bottom: 15px; /* Space below inputs */
+  font-size: 14px; /* Font size for inputs */
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus,
+select:focus {
+  outline: none; /* Remove focus outline */
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Highlight effect on focus */
+}
+
+button {
+  background-color: #fff; /* White button background */
+  color: #000; /* Black text on button */
+  border: none; /* Remove default border */
+  border-radius: 4px; /* Rounded corners */
+  padding: 10px; /* Padding inside button */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 16px; /* Font size for button */
+  transition: background-color 0.3s, color 0.3s; /* Transition effect */
+}
+
+button:hover {
+  background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent white on hover */
+}
+
+p {
+  text-align: center; /* Centered error message */
+  color: red; /* Red color for error messages */
+}

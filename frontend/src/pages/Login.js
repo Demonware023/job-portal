@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import './login.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('jobseeker'); // Default role is jobseeker
+  const [role, setRole] = useState('jobseeker');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -13,41 +14,25 @@ const Login = () => {
     const token = localStorage.getItem('token');
     if (token) {
       const role = localStorage.getItem('role');
-      if (role === 'employer') {
-        navigate('/employer/dashboard');
-      } else if (role === 'jobseeker') {
-        navigate('/jobseeker/dashboard');
-      }
+      navigate(role === 'employer' ? '/employer/dashboard' : '/jobseeker/dashboard');
     }
   }, [navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      let response;
-      if (role === 'jobseeker') {
-        response = await axios.post('/api/auth/login-jobseeker', { email, password });
-      } else if (role === 'employer') {
-        response = await axios.post('/api/auth/login-employer', { email, password });
-      }
-
+      const response = await axios.post(`/api/auth/login-${role}`, { email, password });
       const { token, role: userRole } = response.data;
       localStorage.setItem('token', token);
       localStorage.setItem('role', userRole);
-
-      if (userRole === 'employer') {
-        navigate('/employer/dashboard');
-      } else if (userRole === 'jobSeeker') {
-        navigate('/jobseeker/dashboard');
-      }
+      navigate(userRole === 'employer' ? '/employer/dashboard' : '/jobseeker/dashboard');
     } catch (err) {
-      console.error('Login error:', err);
       setError(err.response?.data?.msg || 'Login failed. Please check your credentials.');
     }
   };
 
   return (
-    <div>
+    <div className="container">
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
         <div>

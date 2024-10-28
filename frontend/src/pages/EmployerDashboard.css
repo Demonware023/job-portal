@@ -2,12 +2,12 @@
 .dashboard-container {
   display: flex;
   height: 100vh;
-  background-color: #f0f2f5; /* Light background */
+  background-color: #f0f2f5 !important; /* Light background */
 }
 
 /* Sidebar */
 .sidebar {
-  width: 250px;
+  width: 150px !important;
   background-color: #1c2533; /* Dark sidebar */
   color: white;
   padding: 20px;
@@ -54,6 +54,20 @@
 
 .sidebar nav ul li a:hover {
   background-color: #0056b3;
+}
+
+.sidebar button {
+  background-color: #FF595E; /* Accent color */
+  color: white;
+  border: none;
+  border-radius: 8px; /* Rounded corners */
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.sidebar button:hover {
+  background-color: #d84c51; /* Darker accent color on hover */
 }
 
 /* Main content */
@@ -128,8 +142,10 @@
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  flex: 1 1 calc(33.33% - 20px);  /* Flex basis for 3 items in a row, adjust as necessary */
-  max-width: calc(33.33% - 20px);  /* Prevents cards from being too wide */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Ensure spacing between card content and buttons */
+  max-width: calc(33.33% - 20px); /* Three cards per row */
 }
 
 .job-card h2 {
@@ -141,8 +157,20 @@
   background-color: #f9f9f9;
   padding: 10px;
   margin: 10px 0;
-  border-radius: 5px;
+  border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column; /* Stack content vertically */
+  align-items: flex-start; /* Align content to the left */
+  gap: 2px;
+  max-height: 70px; /* Reduces the application card details so the job card real size can show */
+}
+
+/* Content within application card */
+.application-card p, .application-card .cover-letter {
+  margin: 5px 0;
+  color: #333; /* Darker text for readability */
+  font-size: 6px;
 }
 
 .view-applications-button, .apply-button {
