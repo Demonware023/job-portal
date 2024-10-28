@@ -38,8 +38,8 @@ The backend development involved creating and managing routes, databases, and se
 
 **Application Routes and APIs:**
 
-- `/api/employers/jobs/:jobId/applications` - Fetches applications for a specific job, with additional filtering capabilities (e.g., status-based).
-- `/api/employer/jobs/:jobId/applications/:appId` - Manages application statuses, allowing employers to accept or reject applications efficiently.
+- `jobs/:jobId/applications` - Fetches applications for a specific job, with additional filtering capabilities (e.g., status-based).
+- `applications/:appId` - Manages application statuses, allowing employers to accept or reject applications efficiently.
 
 - **Data Management with Mongoose:** We used Mongoose’s schema model to manage and validate job and application data, crucial for ensuring a seamless transition from the front end to database storage.
 - **Error Handling:** The server-side code includes error handling for edge cases, like invalid job IDs or restricted access, helping us create a reliable user experience.
